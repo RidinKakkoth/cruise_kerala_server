@@ -3,11 +3,12 @@ const express=require("express")
 const router=express.Router()
 
 
-const{adminSignUP,adminSignin}=require('../controllers/adminController')
+const{adminSignUP,adminSignin,getPartnerData}=require('../controllers/adminController')
 
 
 router.post('/adminSignUp',adminSignUP)
 router.post('/adminSignin',adminSignin)
+router.get('/getPartnerData',getPartnerData)
 
 
 

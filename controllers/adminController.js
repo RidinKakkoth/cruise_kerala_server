@@ -1,4 +1,5 @@
 const Admin = require('../models/adminModel')
+const Partner=require("../models/partnerModel")
 const bcrypt = require("bcrypt");
 const jwt=require("jsonwebtoken")
 
@@ -89,7 +90,29 @@ const adminSignin=async(req,res)=>{
 
 }
 
+const getPartnerData=async (req,res)=>{
+
+  try {
+
+    const token=req.cookies.adminCookie.token
+    const jwtToken=jwt.verify(token,"secretCodeforAdmin")
+
+    if(jwtToken){
+        Partner.find().then((data)=>{
+              res.send(data)
+        }).catch((error)=>{
+          res.status(500).send({error:error.message})
+        })
+
+    }
+    
+  } catch (error) {
+    res.status(401).send({ error: "Unauthorized" });
+  }
+
+
+}
 
 
 
-module.exports = { adminSignUP ,adminSignin};
+module.exports = { adminSignUP ,adminSignin,getPartnerData};
