@@ -6,7 +6,11 @@ const jwt=require("jsonwebtoken")
 
 const partnerSignUp = async (req, res) => {
     try {
-      const { name,email,password,phone,companyName } = req.body;
+      const { name,email,password,phone,company } = req.body;
+      console.log(phone,"kjhjkhnkhnlnlkn");
+
+     const newPhone=parseInt(phone,10)
+
   
       let hashPassword = await bcrypt.hash(password, 10);
   
@@ -14,8 +18,8 @@ const partnerSignUp = async (req, res) => {
         name,
         email,
         password: hashPassword,
-        phone,
-        companyName
+        phone:newPhone,
+        companyName:company
       });
   
       const added = newPartner.save();
@@ -95,4 +99,16 @@ const partnerSignin=async(req,res)=>{
 
 }
 
-module.exports={partnerSignUp,partnerSignin}
+const getPartnerData=async(req,res)=>{
+  try {
+
+    console.log(req.cookies.partnerCookie,"rrrrrrrrrrrrrrrr");
+
+    ////////////////////////////////////////////////////
+    
+  } catch (error) {
+    
+  }
+}
+
+module.exports={partnerSignUp,partnerSignin,getPartnerData}
