@@ -2,12 +2,22 @@ const Partner=require('../models/partnerModel')
 
 const bcrypt = require("bcrypt");
 const jwt=require("jsonwebtoken")
+// SECRET=process.env.PARTNER_SECRET_KEY
 
+const verification=(req)=>{
+  const jwtToken=req.cookies.partnerCookie.token
+
+  const decodedToken=jwt.verify(jwtToken,"secretCodeforPartner")
+
+  const partnerId=decodedToken.id
+
+  return partnerId
+}
 
 const partnerSignUp = async (req, res) => {
     try {
       const { name,email,password,phone,company } = req.body;
-      console.log(phone,"kjhjkhnkhnlnlkn");
+
 
      const newPhone=parseInt(phone,10)
 
@@ -101,14 +111,105 @@ const partnerSignin=async(req,res)=>{
 
 const getPartnerData=async(req,res)=>{
   try {
+;
+if(!req.cookies||!req.cookies.partnerCookie){
+  return res.status(401).json({error:"unAuthorized"});
 
-    console.log(req.cookies.partnerCookie,"rrrrrrrrrrrrrrrr");
+}
 
-    ////////////////////////////////////////////////////
+const partnerId=verification(req)
+
+try {
+
+  const partnerData=await Partner.findById(partnerId)
+
+;
+
+  if(!partnerData){
+    return res.status(404).json({error:"partner not found"})
+  }
+
+  return res.status(200).json({partnerData})
+
+} catch (error) {
+  return res.status(500).json({error:"Database error"})
+}
     
   } catch (error) {
-    
+    return res.status(403).json({error:"Token verification failed"})
   }
 }
 
-module.exports={partnerSignUp,partnerSignin,getPartnerData}
+const updateProfilePic= async(req,res)=>{
+
+  try {
+    const partnerId=verification(req)
+
+        if(!partnerId){
+          throw new Error("Invalid Token")
+        }
+
+        const partnerData=await Partner.findById(partnerId)
+
+        if(!partnerData){
+          throw new Error("User not found")
+        }
+        if(req.file&&req.file.path){
+          partnerData.image=req.file.filename
+          const url = req.file.filename
+          await partnerData.save()
+
+  
+          res.status(200).send({success:true,url,message:"success"})
+        }
+        else{
+          throw new Error ("No image found")
+        }
+
+
+  } catch (error) {
+    res.status(500).json({error:'Internal server error'});
+  }
+}
+
+
+const proofUpload=async(req,res)=>{
+  try {
+
+    const partnerId=verification(req)
+
+    if(!partnerId){
+      throw new Error("Invalid Token")
+    }
+
+    const partnerData=await Partner.findById(partnerId)
+
+if(!partnerData){
+  throw new Error("User not found")
+}
+
+
+if(req.file&&req.file.path){
+  
+
+      partnerData.proof=req.file.filename
+      partnerData.isApproved="pending"
+      const url = req.file.filename
+      await partnerData.save()
+
+
+      res.status(200).send({success:true,message:"success"})
+    }
+    else{
+      throw new Error ("No image found")
+    }
+
+
+} catch (error) {
+res.status(500).json({error:'Internal server error'});
+}
+}
+
+
+
+module.exports={partnerSignUp,partnerSignin,getPartnerData,updateProfilePic,proofUpload}

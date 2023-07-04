@@ -4,6 +4,7 @@ const express=require('express')
 const cookieParser = require('cookie-parser')
 const mongoose=require('mongoose')
 const cors=require('cors')
+const path = require('path');
 const app=express()
 
 const adminRoute=require('./routes/admin')
@@ -11,6 +12,12 @@ const partnerRoute=require('./routes/partner')
 
 app.use(cookieParser())
 app.use(express.urlencoded({extended:false}))
+
+
+// Serve static files from the 'public' directory
+// app.use('/static', express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.use(cors({
     origin:["http://localhost:3000"],

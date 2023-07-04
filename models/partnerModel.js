@@ -12,7 +12,7 @@ const PartnerSchema = new mongoose.Schema({
   isBlocked: { type: Boolean,default:false },
   district: { type: String },
   image: { type: String },
-  isApproved: { type: Boolean,default:false },
+  isApproved: { type: String,default:"upload proof" },
 });
 
 module.exports = mongoose.model("Partner", PartnerSchema);
