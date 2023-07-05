@@ -236,8 +236,13 @@ res.status(500).json({error:'Internal server error'});
       if(!partnerId){
         throw new Error("invalid Token")
       }
+
+      const{Name,Category,Description,BoardingPoint,Town,District,Pin,Rooms,BasePrice,AddGuestPrice,MaxGuest}=req.body
+      const imageFilenames = req.files.map((file) => file.filename); // Get an array of filenames from req.files
+      const LiscenceFile = req.file.filename
+
       const newCruise=new Cruise({
-        
+        partnerId,Name,Category,Description,BoardingPoint,Town,District,Pin,Rooms,BasePrice,AddGuestPrice,MaxGuest,IsBlocked,isApproved,Images:imageFilenames,Liscence:LiscenceFile
       })
 
 
