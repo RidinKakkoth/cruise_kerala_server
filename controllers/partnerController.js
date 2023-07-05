@@ -123,8 +123,6 @@ try {
 
   const partnerData=await Partner.findById(partnerId)
 
-;
-
   if(!partnerData){
     return res.status(404).json({error:"partner not found"})
   }
