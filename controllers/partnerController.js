@@ -1,4 +1,6 @@
 const Partner=require('../models/partnerModel')
+const Cruise=require('../models/cruiseModel')
+const inputValidator=require("../middleware/validator")
 
 const bcrypt = require("bcrypt");
 const jwt=require("jsonwebtoken")
@@ -16,8 +18,15 @@ const verification=(req)=>{
 
 const partnerSignUp = async (req, res) => {
     try {
+      console.log("hhhhh");
       const { name,email,password,phone,company } = req.body;
 
+      try {
+        inputValidator.signupInputValidator(name, email, password, phone);
+      } catch (error) {
+        return res.status(400).json({ error: error.message });
+      }
+  
 
      const newPhone=parseInt(phone,10)
 
@@ -36,7 +45,7 @@ const partnerSignUp = async (req, res) => {
   
       res.json({ msg: "successfully added" });
     } catch (error) {
-      res.status(400).json({ error: error.msg });
+      res.status(400).json({ error: "Signup Error" });
     }
   };
 
@@ -61,11 +70,11 @@ const partnerSignin=async(req,res)=>{
 
         const{email,password}=req.body
        
-    //   const inputError=  inputValidator.loginInputValidator(email,password)
-      
-    //   if(inputError){
-    //     return res.status(400).json({ error: inputError });
-    //   }
+        try {
+          inputValidator.loginInputValidator (email, password);
+        } catch (error) {
+          return res.status(400).json({ error: error.message });
+        }
 
         const partnerData=await Partner.findOne({email:email})
 
@@ -109,6 +118,9 @@ const partnerSignin=async(req,res)=>{
 
 }
 
+  //=================================== partner data ============================================
+
+
 const getPartnerData=async(req,res)=>{
   try {
 ;
@@ -137,6 +149,9 @@ try {
     return res.status(403).json({error:"Token verification failed"})
   }
 }
+
+  //=================================== update partner profile pic ============================================
+
 
 const updateProfilePic= async(req,res)=>{
 
@@ -169,6 +184,8 @@ const updateProfilePic= async(req,res)=>{
     res.status(500).json({error:'Internal server error'});
   }
 }
+
+  //=================================== partner proof upload ============================================
 
 
 const proofUpload=async(req,res)=>{
@@ -208,6 +225,27 @@ res.status(500).json({error:'Internal server error'});
 }
 }
 
+  //=================================== add cruise ============================================
+
+
+  const addCruise=async(req,res)=>{
+    try {
+      
+      const partnerId=verification(req)
+
+      if(!partnerId){
+        throw new Error("invalid Token")
+      }
+      const newCruise=new Cruise({
+        
+      })
+
+
+    } catch (error) {
+      
+      res.status(500).json({error:'Internal server error'});
+    }
+  }
 
 
 module.exports={partnerSignUp,partnerSignin,getPartnerData,updateProfilePic,proofUpload}

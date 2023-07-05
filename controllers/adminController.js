@@ -1,5 +1,6 @@
 const Admin = require('../models/adminModel')
 const Partner=require("../models/partnerModel")
+const inputValidator=require("../middleware/validator")
 const bcrypt = require("bcrypt");
 const jwt=require("jsonwebtoken")
 
@@ -56,18 +57,19 @@ const adminSignin=async(req,res)=>{
 
         const{email,password}=req.body
        
-    //   const inputError=  inputValidator.loginInputValidator(email,password)
-      
-    //   if(inputError){
-    //     return res.status(400).json({ error: inputError });
-    //   }
+        try {
+          inputValidator.loginInputValidator( email, password);
+        } catch (error) {
+          return res.status(400).json({ message: error.message });
+        }
+
 
         const adminData=await Admin.findOne({email:email})
 
         
         if(!adminData){
             
-            return res.status(400).json({ error: "Invalid credentials" });
+            return res.status(400).json({ message: "Invalid credentials" });
         }
         
         const match=await bcrypt.compare(password,adminData.password)
@@ -75,7 +77,7 @@ const adminSignin=async(req,res)=>{
 
         if(!match){
             
-            return res.status(400).json({ error: "Incorrect password" });
+            return res.status(400).json({ message: "Incorrect email or password" });
         }
         
         //create token
@@ -96,10 +98,10 @@ const adminSignin=async(req,res)=>{
           secure:false
         })
           .status(200)
-          .send({ adminLogin });
+          .send({ adminLogin,message:"Login Successfull" });
 
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(400).json({ message:"Error in Login" });
     }
 
 }
