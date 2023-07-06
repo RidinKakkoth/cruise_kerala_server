@@ -1,0 +1,1 @@
+const Cruise=require('../models/cruiseModel')

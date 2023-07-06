@@ -1,7 +1,7 @@
 const validator = require('validator');
 
-const signupInputValidator = (name, email, password, phone, firstname, lastname) => {
-  if (!email || !password || !phone || !firstname || !lastname) {
+const signupInputValidator = (name, email, password, phone) => {
+  if (!email || !password || !phone || !name) {
     throw new Error('All fields must be filled');
   }
   if (!validator.isAlpha(name)) {

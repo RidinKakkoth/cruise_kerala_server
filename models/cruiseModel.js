@@ -3,24 +3,24 @@ const mongoose = require('mongoose');
 
 
 const CruiseSchema = new mongoose.Schema({
-  Name: { type: String, required: true },
-  Category: { type: String, required: true },
-  Description: { type: String, required: true },
-  BoardingPoint: { type: String, required: true },
-  Town: { type: String, required: true },
-  District: { type: String, required: true },
-  Pin: { type: Number, required: true },
-  Rooms: { type: Number, required: true },
-  BasePrice: { type: Number, required: true },
-  AddGuestPrice: { type: Number, required: true },
-  MaxGuest: { type: Number, required: true },
+  name: { type: String, required: true },
+  category: { type: String, required: true },
+  description: { type: String, required: true },
+  boarding: { type: String, required: true },
+  town: { type: String, required: true },
+  district: { type: String, required: true },
+  pin: { type: Number, required: true },
+  rooms: { type: Number, required: true },
+  baseRate: { type: Number, required: true },
+  extraRate: { type: Number, required: true },
+  maxGuest: { type: Number, required: true },
   Images: {type:Array},
   Facilities: [{
     AC:{
         type:Boolean,
         default:true
     },
-    Food:{
+    food:{
         type:Boolean,
         default:true
     },
@@ -32,20 +32,20 @@ const CruiseSchema = new mongoose.Schema({
         type:Boolean,
         default:true
     },
-    PartyHall:{
+    partyHall:{
         type:Boolean,
         default:true
     },
-    Fishing:{
+    fishing:{
         type:Boolean,
         default:true
     },
 
-    Games:{
+    games:{
         type:Boolean,
         default:true
     },
-    WiFi:{
+    wifi:{
         type:Boolean,
         default:true
     }

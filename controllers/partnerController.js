@@ -228,29 +228,58 @@ res.status(500).json({error:'Internal server error'});
   //=================================== add cruise ============================================
 
 
-  const addCruise=async(req,res)=>{
+  // const addCruise=async(req,res)=>{
+  //   try {
+      
+  //     const partnerId=verification(req)
+
+  //     if(!partnerId){
+  //       throw new Error("invalid Token")
+  //     }
+
+  //     const{Name,Category,Description,BoardingPoint,Town,District,Pin,Rooms,BasePrice,AddGuestPrice,MaxGuest}=req.body
+  //     const imageFilenames = req.files.map((file) => file.filename); // Get an array of filenames from req.files
+  //     const LiscenceFile = req.file.filename
+
+  //     const newCruise=new Cruise({
+  //       partnerId,Name,Category,Description,BoardingPoint,Town,District,Pin,Rooms,BasePrice,AddGuestPrice,MaxGuest,IsBlocked,isApproved,Images:imageFilenames,Liscence:LiscenceFile
+  //     })
+
+
+  //   } catch (error) {
+      
+  //     res.status(500).json({error:'Internal server error'});
+  //   }
+  // }
+
+
+  const addCruiseData=async (req,res)=>{
     try {
       
+      const licenseFile = req.files.license[0].filename;
+      const imageFilenames = req.files.images.map((file) => file.filename);
+
       const partnerId=verification(req)
+const{ name,category,description,boarding,town,district,pin,rooms,baseRate,extraRate,maxGuest,AC,food,TV,partyHall,games,fishing,wifi,pets}=req.body
 
       if(!partnerId){
         throw new Error("invalid Token")
       }
-
-      const{Name,Category,Description,BoardingPoint,Town,District,Pin,Rooms,BasePrice,AddGuestPrice,MaxGuest}=req.body
-      const imageFilenames = req.files.map((file) => file.filename); // Get an array of filenames from req.files
-      const LiscenceFile = req.file.filename
-
       const newCruise=new Cruise({
-        partnerId,Name,Category,Description,BoardingPoint,Town,District,Pin,Rooms,BasePrice,AddGuestPrice,MaxGuest,IsBlocked,isApproved,Images:imageFilenames,Liscence:LiscenceFile
+        partnerId,name,category,description,boarding,town,district,pin,rooms,baseRate,extraRate,maxGuest,
+        Facilities: [{AC,food, TV, pets, partyHall,fishing,games, wifi }],
+        Images:imageFilenames,
+        Liscence:licenseFile
       })
-
+      
+     const addedCruise= await newCruise.save()
+     if(addedCruise)
+     res.status(200).send({success:true,message:"success"})
 
     } catch (error) {
-      
       res.status(500).json({error:'Internal server error'});
     }
   }
 
 
-module.exports={partnerSignUp,partnerSignin,getPartnerData,updateProfilePic,proofUpload}
+module.exports={partnerSignUp,partnerSignin,getPartnerData,updateProfilePic,proofUpload,addCruiseData}
