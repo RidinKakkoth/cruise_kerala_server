@@ -184,7 +184,7 @@ if(!partnerId){
 
 const getPartnerProfile=async(req,res)=>{
   try {
-    
+
     const partnerId=req.query.id
    
    if(!partnerId){
@@ -195,6 +195,7 @@ const getPartnerProfile=async(req,res)=>{
        if(!partnerData){
          return res.status(404).json({error:"partner not found"})
        }
+       console.log(partnerData);
 
         res.status(200).json({ partnerData });
    

@@ -15,7 +15,7 @@ router.patch('/partner-approval',partnerApproval)
 router.get('/cruise-data',getCruiseData)
 
 
-router.get('/getPartnerData',getPartnerProfile)
+router.get('/getPartnerProfileData',getPartnerProfile)
 
 
 
