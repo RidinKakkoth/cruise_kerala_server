@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { partnerSignUp, partnerSignin, getPartnerData, updateProfilePic, proofUpload, addCruiseData } = require("../controllers/partnerController");
+
+const { partnerSignUp, partnerSignin, getPartnerData, updateProfilePic, proofUpload } = require("../controllers/partnerController");
+const{getPartnerCruiseData,addCruiseData,blockCruise}=require("../controllers/cruiseController")
+
 const multer = require("multer");
 const path = require('path');
 
@@ -16,16 +19,22 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+
+
 router.post('/partnerSignUp', partnerSignUp);
 router.post('/partnerSignin', partnerSignin);
 router.get('/getPartnerData', getPartnerData);
 router.post('/partner-dp', upload.single('image'), updateProfilePic);
 router.post('/proof-upload', upload.single('file'), proofUpload);
-// router.post('/add-cruise', upload.array('images', 5), upload.single('license'), addCruiseData);
-// router.post('/add-cruise', upload.array('images', 5), upload.single('license'), addCruiseData);
+
 router.post('/add-cruise', upload.fields([
     { name: 'license', maxCount: 1 },
     { name: 'images', maxCount: 5 } 
   ]),addCruiseData)
+
+router.get('/cruise-data',getPartnerCruiseData)
+router.patch('/blockCruise',blockCruise)
+
+
 
 module.exports = router;

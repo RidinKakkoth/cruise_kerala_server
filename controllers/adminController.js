@@ -112,6 +112,7 @@ const getPartnerData=async (req,res)=>{
 
   try {
         Partner.find().then((data)=>{
+          
               res.send(data)
         }).catch((error)=>{
           res.status(500).send({error:error.message})
@@ -181,6 +182,29 @@ if(!partnerId){
   }
 };
 
+const getPartnerProfile=async(req,res)=>{
+  try {
+    
+    const partnerId=req.query.id
+   
+   if(!partnerId){
+     return res.status(404).json({error:"invalid"})
+   }
+       const partnerData=await Partner.findById(partnerId)
+   
+       if(!partnerData){
+         return res.status(404).json({error:"partner not found"})
+       }
+
+        res.status(200).json({ partnerData });
+   
+     } catch (error) {
+   
+       console.error(error);
+       res.status(500).json({ error: "Internal server error" });
+     }
+}
 
 
-module.exports = { adminSignUP ,adminSignin,getPartnerData,partnerApproval,blockPartner};
+
+module.exports = { adminSignUP ,adminSignin,getPartnerData,partnerApproval,blockPartner,getPartnerProfile};

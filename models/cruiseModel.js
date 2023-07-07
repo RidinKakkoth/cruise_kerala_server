@@ -50,7 +50,7 @@ const CruiseSchema = new mongoose.Schema({
         default:true
     }
      }],
-  IsBlocked: { type: Boolean },
+  isBlocked: { type: Boolean,default:false },
   Liscence:{type:String,required:true},
   isApproved:{type:String,default:"pending"},
   partnerId:{
