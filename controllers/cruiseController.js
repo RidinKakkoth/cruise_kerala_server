@@ -108,4 +108,37 @@ res.status(401).send({ error: "Unauthorized" });
 
 }
 
-module.exports={getPartnerCruiseData,getCruiseData,addCruiseData,blockCruise}
+
+const cruiseApproval=async(req,res)=>{
+  try {
+    console.log("hhhhhhhhhhhhhhhhh");
+ const cruiseId=req.query.id
+ const status=req.query.result
+ console.log(cruiseId,"cccccc",status);
+
+
+if(!cruiseId){
+  return res.status(404).json({error:"invalid"})
+}
+    const cruiseData=await Cruise.findById(cruiseId)
+
+    if(!cruiseData){
+      return res.status(404).json({error:"partner not found"})
+    }
+
+    cruiseData.isApproved = status;
+    const updateData = await cruiseData.save();
+
+    res.status(200).json({status, message: "success" });
+
+  } catch (error) {
+
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+
+
+module.exports={getPartnerCruiseData,getCruiseData,addCruiseData,blockCruise,cruiseApproval}
