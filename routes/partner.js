@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { partnerSignUp, partnerSignin, getPartnerData, updateProfilePic, proofUpload } = require("../controllers/partnerController");
+const { partnerSignUp, partnerSignin, getPartnerData, updateProfilePic,updateProfile, proofUpload } = require("../controllers/partnerController");
 const{getPartnerCruiseData,addCruiseData,blockCruise}=require("../controllers/cruiseController")
 
 const multer = require("multer");
@@ -34,6 +34,7 @@ router.post('/add-cruise', upload.fields([
 
 router.get('/cruise-data',getPartnerCruiseData)
 router.patch('/blockCruise',blockCruise)
+router.patch('/update-profile',updateProfile)
 
 
 

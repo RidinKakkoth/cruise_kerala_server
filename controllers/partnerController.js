@@ -17,7 +17,7 @@ const verification=(req)=>{
 
 const partnerSignUp = async (req, res) => {
     try {
-      console.log("hhhhh");
+   
       const { name,email,password,phone,company } = req.body;
 
       try {
@@ -224,8 +224,40 @@ res.status(500).json({error:'Internal server error'});
 }
 }
 
+//==========================updateProfile====================================
+
+const updateProfile=async(req,res)=>{
+  try {
+
+    const {name,email,companyName,phone}=req.body
+    
+
+    const partnerId=verification(req)
+
+    if(!partnerId){
+      throw new Error("Invalid Token")
+    }
+    const partnerData=await Partner.findById(partnerId)
+
+    if(!partnerData){
+      throw new Error("Partner not found")
+    }
+
+    partnerData.name=name
+    partnerData.email=email
+    partnerData.phone=phone
+    partnerData.companyName=companyName
+
+    await partnerData.save()
+    res.status(200).send({success:true,message:"success"})
+    
+
+  } catch (error) {
+    res.status(500).json({error:'Internal server error'});
+  }
+}
 
 
 
 
-module.exports={partnerSignUp,partnerSignin,getPartnerData,updateProfilePic,proofUpload}
+module.exports={partnerSignUp,partnerSignin,getPartnerData,updateProfilePic,proofUpload,updateProfile}
