@@ -169,7 +169,7 @@ if(!partnerId){
     if(!partnerData){
       return res.status(404).json({error:"partner not found"})
     }
-
+console.log(status);
     partnerData.isApproved = status;
     const updateData = await partnerData.save();
 

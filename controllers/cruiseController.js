@@ -1,5 +1,6 @@
 const Cruise=require('../models/cruiseModel')
 const Partner=require('../models/partnerModel')
+const Category=require('../models/categoryModel')
 const jwt=require("jsonwebtoken")
 
 const verification=(req)=>{
@@ -111,10 +112,10 @@ res.status(401).send({ error: "Unauthorized" });
 
 const cruiseApproval=async(req,res)=>{
   try {
-    console.log("hhhhhhhhhhhhhhhhh");
+  
  const cruiseId=req.query.id
  const status=req.query.result
- console.log(cruiseId,"cccccc",status);
+ 
 
 
 if(!cruiseId){
@@ -139,6 +140,34 @@ if(!cruiseId){
 };
 
 
+const addCategory = async (req, res) => {
+  try {
+    const categoryName = req.body.categoryName;
+    const existing = await Category.find({ name: categoryName });
+
+    if (existing.length > 0) {
+      return res.status(400).json({ error: "Category already exists" });
+    }
+
+    const savedCategory = await Category.create({ name: categoryName });
+    res.status(200).json({ message: "Success" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const getCategories=async(req,res)=>{
+  try {
+    const categories=await Category.find()
+    if(categories.length>0){
+      res.status(200).json({categories, message: "Success" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
 
 
-module.exports={getPartnerCruiseData,getCruiseData,addCruiseData,blockCruise,cruiseApproval}
+module.exports={getPartnerCruiseData,getCruiseData,addCruiseData,blockCruise,cruiseApproval,addCategory,getCategories}

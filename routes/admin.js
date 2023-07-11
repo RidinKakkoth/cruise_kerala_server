@@ -4,7 +4,7 @@ const router=express.Router()
 
 
 const{adminSignUP,adminSignin,getPartnerData,blockPartner,partnerApproval,getPartnerProfile}=require('../controllers/adminController')
-const{getCruiseData,cruiseApproval}=require('../controllers/cruiseController')
+const{getCruiseData,cruiseApproval,addCategory,getCategories}=require('../controllers/cruiseController')
 
 
 router.post('/adminSignUp',adminSignUP)
@@ -14,6 +14,9 @@ router.patch('/blockPartner',blockPartner)
 router.patch('/partner-approval',partnerApproval)
 router.patch('/cruise-approval',cruiseApproval)
 router.get('/cruise-data',getCruiseData)
+router.post('/add-category',addCategory)
+router.get('/get-categories',getCategories)
+
 
 
 router.get('/getPartnerProfileData',getPartnerProfile)
