@@ -170,4 +170,33 @@ const getCategories=async(req,res)=>{
 }
 
 
-module.exports={getPartnerCruiseData,getCruiseData,addCruiseData,blockCruise,cruiseApproval,addCategory,getCategories}
+const singleView=async(req,res)=>{
+
+  try {
+
+    const cruiseId=req.params.id
+   
+   if(!cruiseId){
+     return res.status(404).json({error:"invalid"})
+   }
+       const cruiseData=await Cruise.findById(cruiseId)
+   
+       if(!cruiseData){
+         return res.status(404).json({error:"cruise not found"})
+       }
+       console.log(cruiseData);
+
+        res.status(200).json({ cruiseData });
+   
+     } catch (error) {
+   
+       console.error(error);
+       res.status(500).json({ error: "Internal server error" });
+     }
+}
+  
+  
+
+
+
+module.exports={singleView,getPartnerCruiseData,getCruiseData,addCruiseData,blockCruise,cruiseApproval,addCategory,getCategories}
