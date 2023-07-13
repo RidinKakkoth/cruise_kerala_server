@@ -3,11 +3,12 @@ const express=require("express")
 const router=express.Router()
 
 
-const{userSignUp}=require('../controllers/userController')
+const{userSignUp,userSignin}=require('../controllers/userController')
 
 
 
 router.post('/userSignUp',userSignUp)
+router.post('/userSignin',userSignin)
 // router.post('/adminSignin',adminSignin)
 
 
