@@ -7,6 +7,7 @@ const cors=require('cors')
 const path = require('path');
 const app=express()
 
+const userRoute=require('./routes/user')
 const adminRoute=require('./routes/admin')
 const partnerRoute=require('./routes/partner')
 
@@ -27,6 +28,7 @@ app.use(cors({
 
   app.use(express.json());
 
+  app.use("/",userRoute)
   app.use("/admin",adminRoute)
   app.use("/partner",partnerRoute)
 
