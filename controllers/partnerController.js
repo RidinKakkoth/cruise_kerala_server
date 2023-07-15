@@ -122,7 +122,7 @@ const partnerSignin=async(req,res)=>{
 
 const getPartnerData=async(req,res)=>{
   try {
-;
+
 if(!req.cookies||!req.cookies.partnerCookie){
   return res.status(401).json({error:"unAuthorized"});
 

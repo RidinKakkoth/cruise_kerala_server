@@ -3,16 +3,18 @@ const inputValidator=require("../middleware/validator")
 
 const bcrypt = require("bcrypt");
 const jwt=require("jsonwebtoken")
-// SECRET=process.env.PARTNER_SECRET_KEY
+
+
+// SECRET=process.env.USER_SECRET_KEY
 
 const verification=(req)=>{
-  const jwtToken=req.cookies.partnerCookie.token
+  const jwtToken=req.cookies.userCookie.token
 
-  const decodedToken=jwt.verify(jwtToken,"secretCodeforPartner")
+  const decodedToken=jwt.verify(jwtToken,"secretCodeforUser")
 
-  const partnerId=decodedToken.id
+  const userId=decodedToken.id
 
-  return partnerId
+  return userId
 }
 
   //============================================================================================
@@ -127,6 +129,39 @@ const userSignin=async(req,res)=>{
 
 //============================================================================================
 
+const userData=async(req,res)=>{
+  try {
+    
+    if(!req.cookies||!req.cookies.userCookie){
+      return res.status(401).json({error:"unAuthorized"});
+      
+    }
+    
+    const userId=verification(req)
+
+    try {
+    
+      const userData=await User.findById(userId)
+    
+      if(!userData){
+        return res.status(404).json({error:"partner not found"})
+      }
+    
+      return res.status(200).json({userData})
+    
+    } catch (error) {
+      return res.status(500).json({error:"Database error"})
+    }
+        
+      } catch (error) {
+        return res.status(403).json({error:"Token verification failed"})
+      }
+    }
 
 
-module.exports={userSignUp,userSignin}
+
+
+    
+
+
+module.exports={userSignUp,userSignin,userData}

@@ -184,7 +184,6 @@ const singleView=async(req,res)=>{
        if(!cruiseData){
          return res.status(404).json({error:"cruise not found"})
        }
-       console.log(cruiseData);
 
         res.status(200).json({ cruiseData });
    
