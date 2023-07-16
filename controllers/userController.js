@@ -1,4 +1,5 @@
 const User=require('../models/usererModel ')
+const Booking=require('../models/bookingModel')
 const inputValidator=require("../middleware/validator")
 
 const bcrypt = require("bcrypt");
@@ -159,9 +160,25 @@ const userData=async(req,res)=>{
     }
 
 
+//================================getbookings data============================
 
+const getBookings = async (req, res) => {
+  try {
+    const userId = verification(req);
+
+    const bookingData = await Booking.find({userId:userId }).populate('cruiseId')
+
+    if (bookingData) {
+      res.json({ bookingData });
+    } else {
+      return res.status(404).json({ error: "Booking data not found" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
     
 
 
-module.exports={userSignUp,userSignin,userData}
+module.exports={userSignUp,userSignin,userData,getBookings}

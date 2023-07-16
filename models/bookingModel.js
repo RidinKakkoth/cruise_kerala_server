@@ -28,7 +28,7 @@ const bookingSchema = new mongoose.Schema(
 
     cruiseId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "partner",
+      ref: "Cruise",
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
