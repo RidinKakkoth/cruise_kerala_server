@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const {isPartner}=require('../middleware/authentication')
 
 const { partnerSignUp, partnerSignin, getPartnerData, updateProfilePic,updateProfile, proofUpload } = require("../controllers/partnerController");
 const{getPartnerCruiseData,addCruiseData,blockCruise}=require("../controllers/cruiseController")
@@ -23,18 +24,18 @@ const upload = multer({ storage: storage });
 
 router.post('/partnerSignUp', partnerSignUp);
 router.post('/partnerSignin', partnerSignin);
-router.get('/getPartnerData', getPartnerData);
-router.post('/partner-dp', upload.single('image'), updateProfilePic);
-router.post('/proof-upload', upload.single('file'), proofUpload);
+router.get('/getPartnerProfile',isPartner, getPartnerData);
+router.post('/partner-dp',isPartner, upload.single('image'), updateProfilePic);
+router.post('/proof-upload',isPartner, upload.single('file'), proofUpload);
 
-router.post('/add-cruise', upload.fields([
+router.post('/add-cruise',isPartner, upload.fields([
     { name: 'license', maxCount: 1 },
     { name: 'images', maxCount: 5 } 
   ]),addCruiseData)
 
-router.get('/cruise-data',getPartnerCruiseData)
-router.patch('/blockCruise',blockCruise)
-router.patch('/update-profile',updateProfile)
+router.get('/cruise-data',isPartner,getPartnerCruiseData)
+router.patch('/blockCruise',isPartner,blockCruise)
+router.patch('/update-profile',isPartner,updateProfile)
 
 
 

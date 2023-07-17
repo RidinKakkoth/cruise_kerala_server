@@ -166,7 +166,11 @@ const getBookings = async (req, res) => {
   try {
     const userId = verification(req);
 
-    const bookingData = await Booking.find({userId:userId }).populate('cruiseId')
+    const bookingData = await Booking.find({
+      userId: userId,
+      paymentStatus: 'true'
+    }).populate('cruiseId');
+    
 
     if (bookingData) {
       res.json({ bookingData });

@@ -1,29 +1,30 @@
-const express=require("express")
+const express = require("express");
+const {isAdmin}=require('../middleware/authentication')
+const router = express.Router();
 
-const router=express.Router()
+const {
+  adminSignUP,
+  adminSignin,
+  getPartnerData,
+  blockPartner,
+  partnerApproval,
+  getPartnerProfile,
+} = require("../controllers/adminController");
+const {
+  cruiseApproval,
+  addCategory,
+  getCategories,
+} = require("../controllers/cruiseController");
 
+router.post("/adminSignUp", adminSignUP);
+router.post("/adminSignin", adminSignin);
+router.get("/getPartnerData",isAdmin, getPartnerData);
+router.patch("/blockPartner",isAdmin, blockPartner);
+router.patch("/partner-approval",isAdmin, partnerApproval);
+router.patch("/cruise-approval",isAdmin, cruiseApproval);
+router.post("/add-category",isAdmin, addCategory);
+router.get("/get-categories",isAdmin, getCategories);
 
-const{adminSignUP,adminSignin,getPartnerData,blockPartner,partnerApproval,getPartnerProfile}=require('../controllers/adminController')
-const{getCruiseData,cruiseApproval,addCategory,getCategories}=require('../controllers/cruiseController')
+router.get("/getPartnerProfileData",isAdmin, getPartnerProfile);
 
-
-router.post('/adminSignUp',adminSignUP)
-router.post('/adminSignin',adminSignin)
-router.get('/getPartnerData',getPartnerData)
-router.patch('/blockPartner',blockPartner)
-router.patch('/partner-approval',partnerApproval)
-router.patch('/cruise-approval',cruiseApproval)
-router.get('/cruise-data',getCruiseData)
-router.post('/add-category',addCategory)
-router.get('/get-categories',getCategories)
-
-
-
-router.get('/getPartnerProfileData',getPartnerProfile)
-
-
-
-
-
-
-module.exports=router
+module.exports = router;
