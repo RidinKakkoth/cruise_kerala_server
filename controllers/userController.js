@@ -1,5 +1,6 @@
 const User=require('../models/usererModel ')
 const Booking=require('../models/bookingModel')
+const Cruise=require('../models/cruiseModel')
 const inputValidator=require("../middleware/validator")
 
 const bcrypt = require("bcrypt");
@@ -206,7 +207,35 @@ const bookedDates=async (req,res)=>{
   }
 }
 
+const addReview=async(req,res)=>{
+  try {
+
+    const userId=verification(req)
+    const{star,feedback,cruiseId}=req.body
+    
+    const cruiseData=await Cruise.findById(cruiseId)
+
+    if(!cruiseData){
+      return res.status(404).json({error:"cruise not found"})
+    }
+    
+    const review = {
+      ratings: parseInt(star),
+      feedback: feedback,
+      userId: userId,
+    };
+
+    cruiseData.review.push(review);
+
+    await cruiseData.save().then(()=>{
+      return res.json()
+    })
+
+  } catch (error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+}
     
 
 
-module.exports={userSignUp,userSignin,userData,getBookings,bookedDates}
+module.exports={userSignUp,userSignin,userData,getBookings,bookedDates,addReview}

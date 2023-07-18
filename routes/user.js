@@ -5,7 +5,7 @@ const {isUser}=require('../middleware/authentication')
 const router=express.Router()
 
 
-const{userSignUp,userSignin,userData,getBookings,bookedDates}=require('../controllers/userController')
+const{userSignUp,userSignin,userData,getBookings,bookedDates,addReview}=require('../controllers/userController')
 const{singleView,getCruiseData}=require('../controllers/cruiseController')
 const{orderCreate,verify}=require('../controllers/paymentController')
 
@@ -18,6 +18,7 @@ router.get('/getUserData',isUser,userData)
 router.get('/bookings',isUser,getBookings)
 router.get('/cruise-data',getCruiseData)
 router.get('/booked-dates',bookedDates)
+router.post('/review',isUser,addReview)
 
 
 router.post('/orders',isUser,orderCreate)

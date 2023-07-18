@@ -100,14 +100,14 @@ const getCruiseData=async(req,res)=>{
       res.status(500).send({error:error.message})
     })
 
-// }
-
 } catch (error) {
 res.status(401).send({ error: "Unauthorized" });
 }
 
 
 }
+
+
 
 
 const cruiseApproval=async(req,res)=>{
@@ -179,7 +179,7 @@ const singleView=async(req,res)=>{
    if(!cruiseId){
      return res.status(404).json({error:"invalid"})
    }
-       const cruiseData=await Cruise.findById(cruiseId)
+       const cruiseData=await Cruise.findById(cruiseId).populate('review.userId');
    
        if(!cruiseData){
          return res.status(404).json({error:"cruise not found"})

@@ -15,6 +15,18 @@ const CruiseSchema = new mongoose.Schema({
   baseRate: { type: Number, required: true },
   extraRate: { type: Number, required: true },
   maxGuest: { type: Number, required: true },
+  review:[{
+        ratings:{
+            type:Number
+        },
+        feedback:{
+            type:String
+        },
+        userId:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"User"
+        }
+  }],
   Images: {type:Array},
   Facilities: [{
     AC:{
