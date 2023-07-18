@@ -3,7 +3,8 @@ const Booking=require('../models/bookingModel')
 const inputValidator=require("../middleware/validator")
 
 const bcrypt = require("bcrypt");
-const jwt=require("jsonwebtoken")
+const jwt=require("jsonwebtoken");
+const bookingModel = require('../models/bookingModel');
 
 
 // SECRET=process.env.USER_SECRET_KEY
@@ -169,7 +170,8 @@ const getBookings = async (req, res) => {
     const bookingData = await Booking.find({
       userId: userId,
       paymentStatus: 'true'
-    }).populate('cruiseId');
+    }).sort({ createdAt: -1 }).populate('cruiseId');
+    
     
 
     if (bookingData) {
@@ -182,7 +184,29 @@ const getBookings = async (req, res) => {
   }
 };
 
+
+const bookedDates=async (req,res)=>{
+  try {
+
+    const cruiseId=req.query.id
+
+
+    const currentDate = new Date();
+    
+    const bookingDataDates = await Booking.find( {cruiseId: cruiseId},  'checkIn checkOut');
+
+    if(bookingDataDates){
+      res.json(bookingDataDates)
+    }else {
+      return res.status(404).json({ error: " no data" });
+    }
+
+  } catch (error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
     
 
 
-module.exports={userSignUp,userSignin,userData,getBookings}
+module.exports={userSignUp,userSignin,userData,getBookings,bookedDates}
