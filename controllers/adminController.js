@@ -1,5 +1,7 @@
 const Admin = require("../models/adminModel");
 const Partner = require("../models/partnerModel");
+const User = require("../models/userModel");
+const Booking = require("../models/bookingModel");
 const inputValidator = require("../middleware/validator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -106,6 +108,9 @@ const getPartnerData = async (req, res) => {
     res.status(401).send({ error: "Unauthorized" });
   }
 };
+//=============================================================================================
+
+
 
 const blockPartner = async (req, res) => {
   try {
@@ -129,11 +134,41 @@ const blockPartner = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+//======================================================================================================
 
+const blockUser = async (req, res) => {
+  try {
+    const userId = req.query.id;
+
+
+    if (!userId) {
+      return res.status(404).json({ error: "invalid" });
+    }
+    const userData = await User.findById(userId);
+
+    if (!userData) {
+      return res.status(404).json({ error: "partner not found" });
+    }
+
+    userData.isBlocked = !userData.isBlocked;
+    const updateData = await userData.save();
+  
+
+    res.status(200).json({ message: "success" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+//=======================================================================================================
 const partnerApproval = async (req, res) => {
   try {
+
     const partnerId = req.query.id;
     const status = req.query.result;
+    
 
     if (!partnerId) {
       return res.status(404).json({ error: "invalid" });
@@ -175,11 +210,58 @@ const getPartnerProfile = async (req, res) => {
   }
 };
 
+//================================getbookings data============================
+
+const getBookings = async (req, res) => {
+  try {
+ 
+    const bookingData = await Booking.find({ paymentStatus: true })
+      .sort({ createdAt: -1 })
+      .populate('cruiseId').populate('userId')
+
+
+    if (bookingData) {
+      res.json({ bookingData });
+    } else {
+      return res.status(404).json({ error: "Booking data not found" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+//=============================================================================================================================
+
+const getUserData = async (req, res) => {
+  try {
+
+    User.find()
+      .then((data) => {
+        res.send(data);
+      })
+      .catch((error) => {
+        res.status(500).send({ error: error.message });
+      });
+
+    // }
+  } catch (error) {
+    res.status(401).send({ error: "Unauthorized" });
+  }
+};
+
+
+
+
+
+
 module.exports = {
   adminSignUP,
   adminSignin,
   getPartnerData,
   partnerApproval,
   blockPartner,
+  blockUser,
   getPartnerProfile,
+  getBookings,
+  getUserData
 };

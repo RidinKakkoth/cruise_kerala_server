@@ -1,4 +1,5 @@
 const Partner=require('../models/partnerModel')
+const Booking=require('../models/bookingModel')
 const inputValidator=require("../middleware/validator")
 
 const bcrypt = require("bcrypt");
@@ -257,7 +258,33 @@ const updateProfile=async(req,res)=>{
   }
 }
 
+//================================getbookings data============================
+
+const getBookings = async (req, res) => {
+  try {
+
+    const partnerId=verification(req)
+
+    const bookingData = await Booking.find({ paymentStatus: true })
+      .populate('cruiseId').populate("userId")
+const data=await bookingData.filter((value)=>{
+ return value.cruiseId.partnerId.toHexString()===partnerId
+})
 
 
 
-module.exports={partnerSignUp,partnerSignin,getPartnerData,updateProfilePic,proofUpload,updateProfile}
+
+    if (data) {
+      res.json({ data });
+    } else {
+      return res.status(404).json({ error: "Booking data not found" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+  
+
+
+module.exports={partnerSignUp,getBookings,partnerSignin,getPartnerData,updateProfilePic,proofUpload,updateProfile}

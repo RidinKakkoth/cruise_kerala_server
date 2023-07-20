@@ -1,4 +1,4 @@
-const User=require('../models/usererModel ')
+const User=require('../models/userModel')
 const Booking=require('../models/bookingModel')
 const Cruise=require('../models/cruiseModel')
 const inputValidator=require("../middleware/validator")
@@ -235,7 +235,41 @@ const addReview=async(req,res)=>{
     return res.status(500).json({ error: "Internal Server Error" });
   }
 }
+//==========================updateProfile====================================
+
+const updateProfile=async(req,res)=>{
+  try {
+
+    const {userName,email,phone}=req.body
     
 
 
-module.exports={userSignUp,userSignin,userData,getBookings,bookedDates,addReview}
+    const userId=verification(req)
+
+    if(!userId){
+      throw new Error("Invalid Token")
+    }
+    const userData=await User.findById(userId)
+
+    if(!userData){
+      throw new Error("Partner not found")
+    }
+
+    userData.name=userName
+    userData.email=email
+    userData.phone=phone
+
+
+    await userData.save()
+    res.status(200).send({success:true,message:"success"})
+    
+
+  } catch (error) {
+    res.status(500).json({error:'Internal server error'});
+  }
+}
+
+    
+
+
+module.exports={userSignUp,userSignin,userData,getBookings,bookedDates,addReview,updateProfile}

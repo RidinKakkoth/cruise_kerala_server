@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const {isPartner}=require('../middleware/authentication')
 
-const { partnerSignUp, partnerSignin, getPartnerData, updateProfilePic,updateProfile, proofUpload } = require("../controllers/partnerController");
-const{getPartnerCruiseData,addCruiseData,blockCruise}=require("../controllers/cruiseController")
+const { partnerSignUp, partnerSignin, getPartnerData,getBookings, updateProfilePic,updateProfile, proofUpload } = require("../controllers/partnerController");
+const{getPartnerCruiseData,addCruiseData,blockCruise,getCategories}=require("../controllers/cruiseController")
 
 const multer = require("multer");
 const path = require('path');
@@ -33,9 +33,11 @@ router.post('/add-cruise',isPartner, upload.fields([
     { name: 'images', maxCount: 5 } 
   ]),addCruiseData)
 
+router.get("/get-categories",isPartner, getCategories);
 router.get('/cruise-data',isPartner,getPartnerCruiseData)
-router.patch('/blockCruise',isPartner,blockCruise)
+router.get('/blockCruise',isPartner,blockCruise)//patch
 router.patch('/update-profile',isPartner,updateProfile)
+router.get("/get-bookings",isPartner, getBookings);
 
 
 

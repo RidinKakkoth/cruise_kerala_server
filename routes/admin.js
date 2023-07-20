@@ -8,22 +8,26 @@ const {
   getPartnerData,
   blockPartner,
   partnerApproval,
-  getPartnerProfile,
+  getPartnerProfile,getBookings,getUserData,blockUser
 } = require("../controllers/adminController");
 const {
   cruiseApproval,
   addCategory,
-  getCategories,
+  getCategories
 } = require("../controllers/cruiseController");
 
 router.post("/adminSignUp", adminSignUP);
 router.post("/adminSignin", adminSignin);
 router.get("/getPartnerData",isAdmin, getPartnerData);
-router.patch("/blockPartner",isAdmin, blockPartner);
-router.patch("/partner-approval",isAdmin, partnerApproval);
-router.patch("/cruise-approval",isAdmin, cruiseApproval);
+router.get('/getPartnerProfile',isAdmin, getPartnerData);
+router.get("/blockPartner",isAdmin, blockPartner);// patch
+router.get("/blockUser",isAdmin, blockUser);// patch
+router.get("/partner-approval",isAdmin, partnerApproval);//patch
+router.get("/cruise-approval",isAdmin, cruiseApproval);//patch
 router.post("/add-category",isAdmin, addCategory);
 router.get("/get-categories",isAdmin, getCategories);
+router.get("/get-userData",isAdmin, getUserData);
+router.get("/get-bookings",isAdmin, getBookings);
 
 router.get("/getPartnerProfileData",isAdmin, getPartnerProfile);
 

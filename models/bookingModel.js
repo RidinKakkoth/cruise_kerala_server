@@ -21,9 +21,9 @@ const bookingSchema = new mongoose.Schema(
     paymentId: {
       type: String,
     },
-    isCancel: {
-      type: Boolean,
-      default: false,
+    status: {
+      type: String,
+      default: "Booked",
     },
 
     cruiseId: {
@@ -32,7 +32,7 @@ const bookingSchema = new mongoose.Schema(
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
+      ref: "User",
     },
   },
   { timestamps: true }

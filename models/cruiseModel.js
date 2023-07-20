@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 
 const CruiseSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  category: { type: String, required: true },
-//   category: { type: mongoose.Schema.Types.ObjectId, ref:"category", required: true },
+//   category: { type: String, required: true },
+  category: { type: mongoose.Schema.Types.ObjectId, ref:"category", required: true },
   description: { type: String, required: true },
   boarding: { type: String, required: true },
   town: { type: String, required: true },

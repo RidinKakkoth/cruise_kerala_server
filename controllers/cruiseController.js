@@ -54,7 +54,7 @@ const getPartnerCruiseData=async(req,res)=>{
 
           }
 
-          const cruiseData=await Cruise.find({partnerId})
+          const cruiseData=await Cruise.find({partnerId}).populate('category')
           if(!cruiseData){
             return res.status(404).json({error:"not found"})
           }
@@ -94,11 +94,20 @@ const blockCruise=async(req,res)=>{
 
 const getCruiseData=async(req,res)=>{
   try {
-    Cruise.find().then((data)=>{
-          res.send(data)
-    }).catch((error)=>{
-      res.status(500).send({error:error.message})
-    })
+
+
+    const data=await Cruise.find({ isBlocked:false, isApproved:"verified"}).populate("category")
+
+    if(data){
+     const categoryData= await Category.find()
+
+     if(!categoryData){
+      return res.status(404).json({error:"cruise not found"})
+     }
+     res.send({data,categoryData})
+    }
+      
+ 
 
 } catch (error) {
 res.status(401).send({ error: "Unauthorized" });
@@ -193,7 +202,9 @@ const singleView=async(req,res)=>{
        res.status(500).json({ error: "Internal server error" });
      }
 }
-  
+
+
+
   
 
 
