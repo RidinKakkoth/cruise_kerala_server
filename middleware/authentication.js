@@ -11,7 +11,6 @@ const isAdmin =async (req, res, next) => {
     const decodedToken = jwt.verify(jwtToken, "secretCodeforAdmin");
     const adminId = decodedToken.id;
 
-
     const isFound=await Admin.findById(adminId).select('-password')
 
 
@@ -29,6 +28,7 @@ const isAdmin =async (req, res, next) => {
 const isPartner =async (req, res, next) => {
   try {
 
+   
     const jwtToken = req.cookies.partnerCookie.token;
     const decodedToken = jwt.verify(jwtToken, "secretCodeforPartner");
     const partnerId = decodedToken.id;
@@ -50,13 +50,18 @@ const isPartner =async (req, res, next) => {
 
 const isUser =async (req, res, next) => {
   try {
+
+    
     const jwtToken = req.cookies.userCookie.token;
     const decodedToken = jwt.verify(jwtToken, "secretCodeforUser");
     const userId = decodedToken.id;
-
+    
+    
     const isFound=await User.findById(userId).select('-password')
-
+    
     if (isFound) {
+
+
       next(); 
     } else {
       res.status(401).json({ message: "Unauthorized" });

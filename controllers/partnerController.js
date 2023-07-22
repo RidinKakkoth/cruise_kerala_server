@@ -168,6 +168,7 @@ const updateProfilePic= async(req,res)=>{
           throw new Error("User not found")
         }
         if(req.file&&req.file.path){
+          
           partnerData.image=req.file.filename
           const url = req.file.filename
           await partnerData.save()

@@ -1,0 +1,110 @@
+const  Admin  = require('../models/adminModel');
+const Chat=require("../models/chatModel")
+const jwt = require("jsonwebtoken");
+
+const userVerification=(req)=>{
+
+   
+    const cook=req.cookies
+    const jwtToken=req.cookies.userCookie.token
+  
+    const decodedToken=jwt.verify(jwtToken,"secretCodeforUser")
+  
+    const userId=decodedToken.id
+  
+    return userId
+  }
+  const adminVerification = (req) => {
+    const jwtToken = req.cookies.adminCookie.token;
+  
+    const decodedToken = jwt.verify(jwtToken, "secretCodeforAdmin");
+  
+    const adminId = decodedToken.id;
+  
+    return adminId;
+  };
+
+
+const createChat=async(req,res)=>{
+    try {
+
+        const userId = userVerification(req)
+        const adminData=await Admin.findOne()
+        const adminId=adminData._id
+
+        const chat=await Chat.findOne({adminId,userId})
+       
+
+        if(chat) return res.status(200).json(chat)
+        
+        const newChat=new Chat({ adminId,  userId  })
+        
+        const response=await newChat.save()
+        return res.status(200).json(response)
+
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error)
+    }
+
+}
+
+
+const findUserChats=async (req,res)=>{
+
+    const userId=userVerification(req)
+    try {
+        
+        const chats=await Chat.find({  userId  })
+
+        return res.status(200).json(chats)
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error)
+    }
+}
+
+const findAdminChats=async(req,res)=>{
+    const adminId=adminVerification(req)
+    try {
+        
+        const chats=await Chat.find({  adminId  }).populate("userId")
+
+        return res.status(200).json(chats)
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error)
+    }
+}
+
+
+const findChat=async (req,res)=>{
+
+
+    // const userId=req.params.userId
+    const{firstId,secondId}=req.params
+
+
+
+    try {
+        
+        const chat=await Chat.findOne({
+            members:{$all:[firstId,secondId]}
+        })
+        return res.status(200).json(chat)
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error)
+    }
+
+}
+
+
+module.exports={createChat,findUserChats,findChat,findAdminChats}

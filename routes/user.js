@@ -1,11 +1,10 @@
 const express=require("express")
-const {isUser}=require('../middleware/authentication')
-
-
 const router=express.Router()
+const {isUser}=require('../middleware/authentication')
+const upload=require("../middleware/multer")
 
 
-const{userSignUp,userSignin,userData,getBookings,bookedDates,addReview,updateProfile}=require('../controllers/userController')
+const{userSignUp,userSignin,userData,getBookings,bookedDates,addReview,updateProfile,updateProfilePic}=require('../controllers/userController')
 const{singleView,getCruiseData}=require('../controllers/cruiseController')
 const{orderCreate,verify}=require('../controllers/paymentController')
 
@@ -20,6 +19,7 @@ router.get('/cruise-data',getCruiseData)
 router.get('/booked-dates',bookedDates)
 router.post('/review',isUser,addReview)
 router.post('/update-profile',isUser,updateProfile)
+router.post('/user-pic',isUser, upload.single('image'), updateProfilePic);
 
 
 

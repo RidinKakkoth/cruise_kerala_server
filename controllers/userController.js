@@ -268,8 +268,35 @@ const updateProfile=async(req,res)=>{
     res.status(500).json({error:'Internal server error'});
   }
 }
+const updateProfilePic= async(req,res)=>{
+  try {
+    
+    const userId=verification(req)
+    
+    const userData=await User.findById(userId)
+    
+    if(!userData){
+      throw new Error("User not found")
+    }
+    if(req.file&&req.file.path){
 
+      userData.image=req.file.filename
+          const url = req.file.filename
+          await userData.save()
+
+  
+          res.status(200).send({success:true,url,message:"success"})
+        }
+        else{
+          throw new Error ("No image found")
+        }
+
+
+  } catch (error) {
+    res.status(500).json({error:'Internal server error'});
+  }
+}
     
 
 
-module.exports={userSignUp,userSignin,userData,getBookings,bookedDates,addReview,updateProfile}
+module.exports={userSignUp,userSignin,userData,getBookings,bookedDates,addReview,updateProfile,updateProfilePic}

@@ -1,5 +1,7 @@
 const Admin = require("../models/adminModel");
+const Cruise=require("../models/cruiseModel")
 const Partner = require("../models/partnerModel");
+const Category = require("../models/categoryModel");
 const User = require("../models/userModel");
 const Booking = require("../models/bookingModel");
 const inputValidator = require("../middleware/validator");
@@ -7,7 +9,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const verification = (req) => {
-  const jwtToken = req.cookies.partnerCookie.token;
+  const jwtToken = req.cookies.adminCookie.token;
 
   const decodedToken = jwt.verify(jwtToken, "secretCodeforAdmin");
 
@@ -249,6 +251,27 @@ const getUserData = async (req, res) => {
   }
 };
 
+const getCruiseData=async(req,res)=>{
+  try {
+
+
+    const data=await Cruise.find().populate("category")
+
+    if(data){
+     const categoryData= await Category.find()
+
+     if(!categoryData){
+      return res.status(404).json({error:"cruise not found"})
+     }
+     res.send({data,categoryData})
+    }
+      
+ 
+
+} catch (error) {
+res.status(401).send({ error: "Unauthorized" });}
+}
+
 
 
 
@@ -263,5 +286,6 @@ module.exports = {
   blockUser,
   getPartnerProfile,
   getBookings,
-  getUserData
+  getUserData,
+  getCruiseData
 };

@@ -6,6 +6,7 @@ const {
   adminSignUP,
   adminSignin,
   getPartnerData,
+  getCruiseData,
   blockPartner,
   partnerApproval,
   getPartnerProfile,getBookings,getUserData,blockUser
@@ -27,6 +28,8 @@ router.get("/cruise-approval",isAdmin, cruiseApproval);//patch
 router.post("/add-category",isAdmin, addCategory);
 router.get("/get-categories",isAdmin, getCategories);
 router.get("/get-userData",isAdmin, getUserData);
+router.get('/cruise-data',isAdmin,getCruiseData)
+
 router.get("/get-bookings",isAdmin, getBookings);
 
 router.get("/getPartnerProfileData",isAdmin, getPartnerProfile);

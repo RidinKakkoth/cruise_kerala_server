@@ -1,24 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const {isPartner}=require('../middleware/authentication')
+const upload=require("../middleware/multer")
 
 const { partnerSignUp, partnerSignin, getPartnerData,getBookings, updateProfilePic,updateProfile, proofUpload } = require("../controllers/partnerController");
 const{getPartnerCruiseData,addCruiseData,blockCruise,getCategories}=require("../controllers/cruiseController")
-
-const multer = require("multer");
-const path = require('path');
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../public/files"));
-  },
-  filename: function (req, file, cb) {
-    const name = Date.now() + "-" + file.originalname;
-    cb(null, name);
-  }
-});
-
-const upload = multer({ storage: storage });
 
 
 
