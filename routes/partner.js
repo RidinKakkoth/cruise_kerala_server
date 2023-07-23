@@ -21,7 +21,7 @@ router.post('/add-cruise',isPartner, upload.fields([
 
 router.get("/get-categories",isPartner, getCategories);
 router.get('/cruise-data',isPartner,getPartnerCruiseData)
-router.get('/blockCruise',isPartner,blockCruise)//patch
+router.patch('/blockCruise',isPartner,blockCruise)//patch
 router.patch('/update-profile',isPartner,updateProfile)
 router.get("/get-bookings",isPartner, getBookings);
 

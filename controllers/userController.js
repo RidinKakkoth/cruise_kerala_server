@@ -241,9 +241,7 @@ const updateProfile=async(req,res)=>{
   try {
 
     const {userName,email,phone}=req.body
-    
-
-
+  
     const userId=verification(req)
 
     if(!userId){

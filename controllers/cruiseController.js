@@ -1,7 +1,8 @@
 const Cruise=require('../models/cruiseModel')
 const Partner=require('../models/partnerModel')
 const Category=require('../models/categoryModel')
-const Notification=require("../models/notificationModel")
+const Booking=require('../models/bookingModel')
+const Coupon=require("../models/couponModel")
 const jwt=require("jsonwebtoken")
 
 const verification=(req)=>{
@@ -52,14 +53,11 @@ const addCruiseData=async (req,res)=>{
 const getPartnerCruiseData=async(req,res)=>{
     try {
 
-
-
         const partnerId=verification(req)
       
         if(!partnerId){
           return  res.status(401).json({ error: 'Invalid token' });
-
-          }
+           }
 
           const cruiseData=await Cruise.find({partnerId}).populate('category')
           if(!cruiseData){
@@ -72,6 +70,8 @@ const getPartnerCruiseData=async(req,res)=>{
         res.status(500).json({error:'Internal server error'});
     }
 }
+
+//<==================================== block cruise  ==================================>
 
 const blockCruise=async(req,res)=>{
   try {
@@ -103,6 +103,7 @@ const blockCruise=async(req,res)=>{
      }
 }
 
+//<==================================== get cruise data ==================================>
 
 const getCruiseData=async(req,res)=>{
   try {
@@ -129,7 +130,7 @@ res.status(401).send({ error: "Unauthorized" });
 }
 
 
-
+//<====================================  cruise approval ==================================>
 
 const cruiseApproval=async(req,res)=>{
   try {
@@ -160,6 +161,7 @@ if(!cruiseId){
   }
 };
 
+//<==================================== add category ==================================>
 
 const addCategory = async (req, res) => {
   try {
@@ -178,6 +180,8 @@ const addCategory = async (req, res) => {
   }
 };
 
+//<==================================== get categories ==================================>
+
 const getCategories=async(req,res)=>{
   try {
     const categories=await Category.find()
@@ -189,7 +193,27 @@ const getCategories=async(req,res)=>{
     res.status(500).json({ error: "Internal server error" });
   }
 }
+//<==================================== edit category ==================================>
+const editCategory=async(req,res)=>{
+  try {
+    const categoryId=req.params.id
+    const {name}=req.body
+    const categoryData=await Category.findById(categoryId)
+    if(!categoryData){
+      res.status(404).json({error:"not found"});
+    }
+    categoryData.name=name
+    await categoryData.save()
+    res.status(200).send({categoryData,message:"success"})
 
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+
+//<==================================== single view cruise data ==================================>
 
 const singleView=async(req,res)=>{
 
@@ -214,11 +238,81 @@ const singleView=async(req,res)=>{
        res.status(500).json({ error: "Internal server error" });
      }
 }
+//<==================================== cancel booking ==================================>
+const cancelBooking=async(req,res)=>{
+  try {
+
+    const bookingId=req.params.id
+
+    const bookingData=await Booking.findById(bookingId)
+    if(!bookingData){
+      return res.status(404).json({error:"booking not found"})
+    }
+    bookingData.status="Cancelled"
+    bookingData.save()
+    res.status(200).json({ bookingData });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+//<==================================== edit cruise data ==================================>
+
+const editCruiseData=async (req,res)=>{
+  try {
+    
+    const licenseFile = req.files.license[0].filename;
+    const imageFilenames = req.files.images.map((file) => file.filename);
+
+    const{ name,category,description,boarding,town,district,pin,rooms,baseRate,extraRate,maxGuest,AC,food,TV,partyHall,games,fishing,wifi,pets}=req.body
+    
+    const cruiseId=req.params.id
+
+    if(!cruiseId){
+     return res.status(401).json({ error: 'Invalid ' });
+    }
+    const cruiseData= await Cruise.findById({cruiseId})
+              Cruise.findByIdAndUpdate({ name,category,description,boarding,town,district,pin,rooms,baseRate,extraRate,maxGuest})
+    // const newCruise=new Cruise({
+    //   partnerId,name,category,description,boarding,town,district,pin,rooms,baseRate,extraRate,maxGuest,
+    //   Facilities: [{AC,food, TV, pets, partyHall,fishing,games, wifi }],
+    //   Images:imageFilenames,
+    //   Liscence:licenseFile
+    // })
+    
+   const addedCruise= await cruiseData.save()
+
+   await Notification.create({
+    message:'Partner added new cruise',
+    notification:`Partner updated ${cruiseData.name} details `,
+    status:'warning'
+  })
+   if(addedCruise)
+   res.status(200).send({success:true,message:"success"})
+
+  } catch (error) {
+    res.status(500).json({error:'Internal server error'});
+  }
+}
+//<====================================== add coupon ===================================>
+const addCoupon = async (req, res) => {
+  try {
+    const {offerName,description,discountPercentage,discount,couponCode,validFrom,validUpto,userLimit} = req.body;
+   
+    const existing = await Offer.find({ name: couponCode });
+
+    if (existing.length > 0) {
+      return res.status(400).json({ error: "Coupon already exists" });
+    }
+
+    const savedCoupon = await Coupon.create({ offerName,description,discountPercentage,discount,couponCode,validFrom,validUpto,userLimit});
+    res.status(200).json({ message: "Success" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 
 
-  
-
-
-
-module.exports={singleView,getPartnerCruiseData,getCruiseData,addCruiseData,blockCruise,cruiseApproval,addCategory,getCategories}
+module.exports={singleView,getPartnerCruiseData,getCruiseData,addCoupon,addCruiseData,blockCruise,cruiseApproval,addCategory,getCategories,editCategory,cancelBooking}
