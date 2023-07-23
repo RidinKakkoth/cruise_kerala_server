@@ -2,11 +2,13 @@ const Admin = require("../models/adminModel");
 const Cruise=require("../models/cruiseModel")
 const Partner = require("../models/partnerModel");
 const Category = require("../models/categoryModel");
+const Notification = require("../models/notificationModel");
 const User = require("../models/userModel");
 const Booking = require("../models/bookingModel");
 const inputValidator = require("../middleware/validator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { findOneAndDelete } = require("../models/notificationModel");
 
 const verification = (req) => {
   const jwtToken = req.cookies.adminCookie.token;
@@ -272,6 +274,44 @@ const getCruiseData=async(req,res)=>{
 res.status(401).send({ error: "Unauthorized" });}
 }
 
+const getNotification=async(req,res)=>{
+  try {
+    
+    const data=await Notification.find()
+
+     if(!data){
+      return res.status(404).json({error:" not found"})
+     }
+     res.send({data})
+    
+  } catch (error) {
+    res.status(401).send({ error: "Unauthorized" });
+  }
+}
+
+const deleteNotification = async (req, res) => {
+  try {
+    const notifId = req.params.id;
+
+
+    if (notifId) {
+      const notification = await Notification.findByIdAndDelete(notifId);
+      
+      if (notification) {
+        return res.json({ message: "Notification deleted successfully." });
+      } else {
+        return res.status(404).json({ error: "Notification not found." });
+      }
+    }
+
+    return res.status(400).json({ error: "Notification ID is missing." });
+  } catch (error) {
+    console.error("Error deleting notification:", error);
+    return res.status(500).json({ error: "An error occurred while deleting the notification." });
+  }
+};
+
+
 
 
 
@@ -287,5 +327,7 @@ module.exports = {
   getPartnerProfile,
   getBookings,
   getUserData,
-  getCruiseData
+  getCruiseData,
+  getNotification,
+  deleteNotification
 };

@@ -1,5 +1,6 @@
 const Partner=require('../models/partnerModel')
 const Booking=require('../models/bookingModel')
+const Notification=require("../models/notificationModel")
 const inputValidator=require("../middleware/validator")
 
 const bcrypt = require("bcrypt");
@@ -41,7 +42,12 @@ const partnerSignUp = async (req, res) => {
         companyName:company
       });
   
-      const added = newPartner.save();
+      const added = await newPartner.save();
+      await Notification.create({
+        message:'Partner Joined',
+        notification:`New Partner ${added.name} Joined Please check... `,
+        status:'success'
+      })
   
       res.json({ msg: "successfully added" });
     } catch (error) {
@@ -213,6 +219,11 @@ if(req.file&&req.file.path){
       const url = req.file.filename
       await partnerData.save()
 
+      await Notification.create({
+        message:'Partner Proof uploaded',
+        notification:`Partner ${partnerData.name} added proof please verify... `,
+        status:'warning'
+      })
 
       res.status(200).send({success:true,message:"success"})
     }
@@ -251,6 +262,11 @@ const updateProfile=async(req,res)=>{
     partnerData.companyName=companyName
 
     await partnerData.save()
+    await Notification.create({
+      message:'Partner profile updated',
+      notification:`Partner ${partnerData.name} profile updated `,
+      status:'warning'
+    })
     res.status(200).send({success:true,message:"success"})
     
 

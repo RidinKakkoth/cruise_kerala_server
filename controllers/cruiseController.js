@@ -1,6 +1,7 @@
 const Cruise=require('../models/cruiseModel')
 const Partner=require('../models/partnerModel')
 const Category=require('../models/categoryModel')
+const Notification=require("../models/notificationModel")
 const jwt=require("jsonwebtoken")
 
 const verification=(req)=>{
@@ -25,6 +26,7 @@ const addCruiseData=async (req,res)=>{
       if(!partnerId){
        return res.status(401).json({ error: 'Invalid token' });
       }
+      const partnerData= await Partner.findById({partnerId})
       const newCruise=new Cruise({
         partnerId,name,category,description,boarding,town,district,pin,rooms,baseRate,extraRate,maxGuest,
         Facilities: [{AC,food, TV, pets, partyHall,fishing,games, wifi }],
@@ -33,6 +35,11 @@ const addCruiseData=async (req,res)=>{
       })
       
      const addedCruise= await newCruise.save()
+     await Notification.create({
+      message:'Partner added new cruise',
+      notification:`Partner ${partnerData.name} added new cruise ${newCruise.name} `,
+      status:'warning'
+    })
      if(addedCruise)
      res.status(200).send({success:true,message:"success"})
 
@@ -81,6 +88,11 @@ const blockCruise=async(req,res)=>{
       cruideData.isBlocked = !cruideData.isBlocked;
        const updateData = await cruideData.save();
 
+       await Notification.create({
+        message:'Cruise blocked',
+        notification:`Cruise ${updateData.name} has blocked ! `,
+        status:'danger'
+      })
    
     res.status(200).json({ message:"success" });
    

@@ -6,8 +6,8 @@ const jwt = require("jsonwebtoken");
 
 const isAdmin =async (req, res, next) => {
   try {
-
     const jwtToken = req.cookies.adminCookie.token;
+
     const decodedToken = jwt.verify(jwtToken, "secretCodeforAdmin");
     const adminId = decodedToken.id;
 

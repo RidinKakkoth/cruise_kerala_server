@@ -4,9 +4,7 @@ const express=require('express')
 const cookieParser = require('cookie-parser')
 const mongoose=require('mongoose')
 const cors=require('cors')
-const socketIO = require('socket.io'); 
 const path = require('path');
-const http=require("http")
 const app=express()
 
 const userRoute=require('./routes/user')
@@ -18,13 +16,13 @@ const messageRoute=require('./routes/message')
 app.use(cookieParser())
 app.use(express.urlencoded({extended:false}))
 
-const server = http.createServer(app);
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(express.json());
 
 app.use(cors({
     origin:["http://localhost:3000"],
-    methods:['GET','POST','PATCH'],
+    methods:['GET','POST','PATCH','DELETE'],
     credentials:true
   }))
 // app.use(cors({
@@ -33,7 +31,6 @@ app.use(cors({
 //   credentials: true
 // }));
 
-  app.use(express.json());
 
   app.use("/",userRoute)
   app.use("/admin",adminRoute)
