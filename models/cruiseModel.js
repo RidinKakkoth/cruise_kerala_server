@@ -25,6 +25,9 @@ const CruiseSchema = new mongoose.Schema({
         userId:{
             type:mongoose.Schema.Types.ObjectId,
             ref:"User"
+        },created:{
+            type:Date,
+            default:Date.now()
         }
   }],
   Images: {type:Array},

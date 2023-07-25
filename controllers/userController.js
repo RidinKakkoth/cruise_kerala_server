@@ -7,6 +7,8 @@ const bcrypt = require("bcrypt");
 const jwt=require("jsonwebtoken");
 const bookingModel = require('../models/bookingModel');
 
+const cloudinary=require("../middleware/cloudinaryConfig")
+
 
 // SECRET=process.env.USER_SECRET_KEY
 
@@ -266,10 +268,15 @@ const updateProfile=async(req,res)=>{
     res.status(500).json({error:'Internal server error'});
   }
 }
+
+//<================================ profile pic update ================================>
+
+
 const updateProfilePic= async(req,res)=>{
   try {
     
     const userId=verification(req)
+    
     
     const userData=await User.findById(userId)
     
@@ -278,8 +285,12 @@ const updateProfilePic= async(req,res)=>{
     }
     if(req.file&&req.file.path){
 
-      userData.image=req.file.filename
-          const url = req.file.filename
+     const result=await cloudinary.uploader.upload(req.file.path)
+      
+      // userData.image=req.file.filename
+      // const url = req.file.filename
+      const url = result. secure_url
+      userData.image=result. secure_url
           await userData.save()
 
   

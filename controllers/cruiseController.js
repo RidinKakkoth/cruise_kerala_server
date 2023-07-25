@@ -1,8 +1,10 @@
 const Cruise=require('../models/cruiseModel')
 const Partner=require('../models/partnerModel')
 const Category=require('../models/categoryModel')
+const Notification=require('../models/notificationModel')
 const Booking=require('../models/bookingModel')
 const Coupon=require("../models/couponModel")
+const cloudinary=require("../middleware/cloudinaryConfig")
 const jwt=require("jsonwebtoken")
 
 const verification=(req)=>{
@@ -18,31 +20,44 @@ const verification=(req)=>{
 const addCruiseData=async (req,res)=>{
     try {
       
-      const licenseFile = req.files.license[0].filename;
-      const imageFilenames = req.files.images.map((file) => file.filename);
+      const licenseFile = req.files.license[0].path;
+      // const licenseFile = req.files.license[0].filename;
+      // const imageFilenames = req.files.images.map((file) => file.filename);
+         const imageFilenames = req.files.images
+    
+        //  console.log(imageFilenames,licenseFile);
 
+       const Images = [];
+
+       for (const file of imageFilenames) {
+         const result = await cloudinary.uploader.upload(file.path);
+       Images.push(result.secure_url);
+      }
+   
+      const licenseResult=await cloudinary.uploader.upload(licenseFile)
+      
       const{ name,category,description,boarding,town,district,pin,rooms,baseRate,extraRate,maxGuest,AC,food,TV,partyHall,games,fishing,wifi,pets}=req.body
       const partnerId=verification(req)
-
       if(!partnerId){
        return res.status(401).json({ error: 'Invalid token' });
       }
-      const partnerData= await Partner.findById({partnerId})
+      const partnerData= await Partner.findById(partnerId)
       const newCruise=new Cruise({
         partnerId,name,category,description,boarding,town,district,pin,rooms,baseRate,extraRate,maxGuest,
         Facilities: [{AC,food, TV, pets, partyHall,fishing,games, wifi }],
-        Images:imageFilenames,
-        Liscence:licenseFile
+        Images,
+        Liscence:licenseResult.secure_url
       })
       
      const addedCruise= await newCruise.save()
+
      await Notification.create({
       message:'Partner added new cruise',
       notification:`Partner ${partnerData.name} added new cruise ${newCruise.name} `,
       status:'warning'
     })
      if(addedCruise)
-     res.status(200).send({success:true,message:"success"})
+     res.status(200).send({status:true,message:"success"})
 
     } catch (error) {
       res.status(500).json({error:'Internal server error'});

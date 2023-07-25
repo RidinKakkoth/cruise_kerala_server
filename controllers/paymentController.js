@@ -25,7 +25,6 @@ try {
   const userId=verification(req)
 
   const{totalAmount,guest,cruiseId,checkInDate,checkOutDate}=req.body
-  console.log(req.body);
 
   const guestNum=parseInt(guest)
 
@@ -44,7 +43,7 @@ const options = {
     return res.status(500).json("something  went wrong!")
   }
  
-console.log(cruiseId,"ddddddddddddd");
+
   const newBooking=new bookingModel({
     total:totalAmount,
     checkIn:checkInDate,

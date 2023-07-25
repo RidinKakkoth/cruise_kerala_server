@@ -24,14 +24,14 @@ router.get("/getPartnerData",isAdmin, getPartnerData);
 router.get('/getPartnerProfile',isAdmin, getPartnerData);
 router.get("/getPartnerProfileData",isAdmin, getPartnerProfile);
 router.patch("/blockPartner",isAdmin, blockPartner);// patch
-router.get("/partner-approval",isAdmin, partnerApproval);//patch
+router.patch("/partner-approval",isAdmin, partnerApproval);//patch
 
 router.patch("/blockUser",isAdmin, blockUser);// patch
 router.get("/get-userData",isAdmin, getUserData);
 
 router.get('/cruise-data',isAdmin,getCruiseData)
-router.get("/cruise-approval",isAdmin, cruiseApproval);//patch
-router.get('/blockCruise',isAdmin,blockCruise)
+router.patch("/cruise-approval",isAdmin, cruiseApproval);//patch
+router.patch('/blockCruise',isAdmin,blockCruise)
 router.get("/get-bookings",isAdmin, getBookings);
 
 router.post("/add-category",isAdmin, addCategory);

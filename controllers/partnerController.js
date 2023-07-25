@@ -2,6 +2,7 @@ const Partner=require('../models/partnerModel')
 const Booking=require('../models/bookingModel')
 const Notification=require("../models/notificationModel")
 const inputValidator=require("../middleware/validator")
+const cloudinary=require("../middleware/cloudinaryConfig")
 
 const bcrypt = require("bcrypt");
 const jwt=require("jsonwebtoken")
@@ -24,6 +25,9 @@ const partnerSignUp = async (req, res) => {
 
       try {
         inputValidator.signupInputValidator(name, email, password, phone);
+        if(!company){
+          throw new Error('Company required');
+        }
       } catch (error) {
         return res.status(400).json({ error: error.message });
       }
@@ -130,11 +134,6 @@ const partnerSignin=async(req,res)=>{
 const getPartnerData=async(req,res)=>{
   try {
 
-if(!req.cookies||!req.cookies.partnerCookie){
-  return res.status(401).json({error:"unAuthorized"});
-
-}
-
 const partnerId=verification(req)
 
 try {
@@ -174,9 +173,12 @@ const updateProfilePic= async(req,res)=>{
           throw new Error("User not found")
         }
         if(req.file&&req.file.path){
+          const result=await cloudinary.uploader.upload(req.file.path)
+          // partnerData.image=req.file.filename
+          // const url = req.file.filename
           
-          partnerData.image=req.file.filename
-          const url = req.file.filename
+          partnerData.image=result. secure_url
+          const url = result. secure_url
           await partnerData.save()
 
   
@@ -213,10 +215,14 @@ if(!partnerData){
 
 if(req.file&&req.file.path){
   
+  const result=await cloudinary.uploader.upload(req.file.path)
 
-      partnerData.proof=req.file.filename
+
+      // partnerData.proof=req.file.filename
+      // const url = req.file.filename
+      partnerData.proof=result. secure_url
+      const url = result. secure_url
       partnerData.isApproved="pending"
-      const url = req.file.filename
       await partnerData.save()
 
       await Notification.create({
