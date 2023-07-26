@@ -307,7 +307,43 @@ const data=await bookingData.filter((value)=>{
   }
 };
 
+const emailValid = async (req, res) => {
+  try {
+    const email = req.query.email;
+
+    const partnerExist = await Partner.findOne({ email });
+
+    if (partnerExist) {
+      return res.json({ status: true });
+    } else {
+     return res.json({ status: false });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const resetPass = async (req, res) => {
+  try {
+    const password = req.body.password;
+    const email = req.body.email;
   
+    let hashPassword = await bcrypt.hash(password, 10);
+
+    const partnerExist = await Partner.findOne({ email });
+
+    if (!partnerExist) {
+      throw new Error("User not found")
+    } else {
+      partnerExist.password=hashPassword
+      partnerExist.save()
+     return res.json({ status: true });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
 
-module.exports={partnerSignUp,getBookings,partnerSignin,getPartnerData,updateProfilePic,proofUpload,updateProfile}
+
+module.exports={partnerSignUp,resetPass,emailValid,getBookings,partnerSignin,getPartnerData,updateProfilePic,proofUpload,updateProfile}

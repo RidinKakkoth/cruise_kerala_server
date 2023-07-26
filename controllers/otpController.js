@@ -26,21 +26,8 @@ const transporter = nodemailer.createTransport({
 
 // Function to send OTP via email
 async function sendOTP(req, res) {
-  const { email,role } = req.body;
-   
-if(role==="user"){
-  const isExist=await User.findOne({email:email})
-
-   if(isExist){
-    return res.status(400).json({ message: "User already exist" });
-   }}
-if(role==="partner"){
-  const isExist=await Partner.findOne({email:email})
-   if(isExist){
-    return res.status(400).json({ message: "Partner already exist" });
-   }}
-   
-
+  const { email } = req.body;
+  console.log(email,"qqqqqqqqqqqqq");
   const otp = generateOTP();
 
   const mailOptions = {
@@ -67,6 +54,7 @@ if(role==="partner"){
 // Function to verify OTP
 function verifyOTP(req, res) {
   const { email, otp } = req.body;
+  console.log(email,otp,"0000000000");
   const storedOTP = otpMap.get(email);
 
   if (storedOTP && storedOTP.otp === otp && storedOTP.expirationTime >= Date.now()) {

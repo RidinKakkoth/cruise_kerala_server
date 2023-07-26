@@ -309,7 +309,46 @@ const updateProfilePic= async(req,res)=>{
     res.status(500).json({error:'Internal server error'});
   }
 }
-    
+//===========================================================================
+
+const emailValid = async (req, res) => {
+  try {
+    const email = req.query.email;
+
+    const userExist = await User.findOne({ email });
+
+    if (userExist) {
+      return res.json({ status: true });
+    } else {
+     return res.json({ status: false });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+//===========================================================================
+
+const resetPass = async (req, res) => {
+  try {
+    const password = req.body.password;
+    const email = req.body.email;
+    let hashPassword = await bcrypt.hash(password, 10);
+
+    const userExist = await User.findOne({ email });
+
+    if (!userExist) {
+      throw new Error("User not found")
+    } else {
+      userExist.password=hashPassword
+      userExist.save()
+     return res.json({ status: true });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
 
-module.exports={userSignUp,userSignin,userData,getBookings,bookedDates,addReview,updateProfile,updateProfilePic}
+
+
+module.exports={userSignUp,userSignin,userData,getBookings,bookedDates,addReview,updateProfile,updateProfilePic,emailValid,resetPass}
