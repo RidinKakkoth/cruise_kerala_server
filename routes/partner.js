@@ -5,7 +5,7 @@ const upload=require("../middleware/multer")
 
 const { partnerSignUp, partnerSignin, getPartnerData,getBookings, updateProfilePic,updateProfile, proofUpload } = require("../controllers/partnerController");
 const{getPartnerCruiseData,addCruiseData,blockCruise,getCategories}=require("../controllers/cruiseController")
-
+const{sendOTP,verifyOTP}=require('../controllers/otpController')
 
 
 router.post('/partnerSignUp', partnerSignUp);
@@ -18,6 +18,9 @@ router.post('/add-cruise',isPartner, upload.fields([
     { name: 'license', maxCount: 1 },
     { name: 'images', maxCount: 5 } 
   ]),addCruiseData)
+
+  router.post("/sendOTP", sendOTP);
+  router.post("/verifyOTP", verifyOTP);
 
 router.get("/get-categories",isPartner, getCategories);
 router.get('/cruise-data',isPartner,getPartnerCruiseData)

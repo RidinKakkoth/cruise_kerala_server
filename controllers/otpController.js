@@ -1,4 +1,6 @@
 const nodemailer = require("nodemailer");
+const User=require("../models/userModel")
+const Partner=require("../models/partnerModel")
 
 const OTP_EXPIRATION = 3 * 60 * 1000; // OTP expiration time (5 minutes)
 
@@ -23,8 +25,22 @@ const transporter = nodemailer.createTransport({
 });
 
 // Function to send OTP via email
-function sendOTP(req, res) {
-  const { email } = req.body;
+async function sendOTP(req, res) {
+  const { email,role } = req.body;
+   
+if(role==="user"){
+  const isExist=await User.findOne({email:email})
+
+   if(isExist){
+    return res.status(400).json({ message: "User already exist" });
+   }}
+if(role==="partner"){
+  const isExist=await Partner.findOne({email:email})
+   if(isExist){
+    return res.status(400).json({ message: "Partner already exist" });
+   }}
+   
+
   const otp = generateOTP();
 
   const mailOptions = {
@@ -37,13 +53,13 @@ function sendOTP(req, res) {
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log(error);
-      res.status(500).json({ message: "Failed to send OTP" });
+      res.status(500).json({status:false, message: "Failed to send OTP" });
     } else {
       otpMap.set(email, {
         otp: otp,
         expirationTime: Date.now() + OTP_EXPIRATION,
       });
-      res.status(200).json({ message: "OTP sent successfully" });
+      res.status(200).json({status:true, message: "OTP sent successfully" });
     }
   });
 }

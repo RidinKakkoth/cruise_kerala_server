@@ -40,7 +40,7 @@ const userSignUp = async (req, res) => {
   
      const newPhone=parseInt(phone,10)
 
-     const isExist=await User.find({email:email})
+     const isExist=await User.findOne({email:email})
      if(isExist){
       return res.status(400).json({ error: "User already exist" });
      }

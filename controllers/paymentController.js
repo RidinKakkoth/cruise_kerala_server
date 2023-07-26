@@ -2,6 +2,7 @@ const Razorpay = require("razorpay");
 const crypto = require('crypto');
 const jwt=require("jsonwebtoken");
 const bookingModel = require("../models/bookingModel");
+const sendBookingConfirmationEmail = require("../middleware/confirmationMail");
 
 const verification=(req)=>{
   const jwtToken=req.cookies.userCookie.token
@@ -12,10 +13,6 @@ const verification=(req)=>{
 
   return userId
 }
-
-
-
-
 
 
 const orderCreate = async (req, res) => {
@@ -84,7 +81,7 @@ const verify = async (req, res) => {
       .digest("hex");
 
     if (razorpay_signature === expectedSign) {
-      const bookingData = await bookingModel.findOne({ bookingId: razorpay_order_id });
+      const bookingData = await bookingModel.findOne({ bookingId: razorpay_order_id }).populate("cruiseId").populate("userId");
 
       if (!bookingData) {
         return res.status(404).json({ message: "Booking not found" });
@@ -94,6 +91,13 @@ const verify = async (req, res) => {
       bookingData.paymentId = razorpay_payment_id;
 
       const bookedData = await bookingData.save();
+
+    
+      const email=bookedData.userId.email
+      await sendBookingConfirmationEmail(email,bookedData)
+
+
+
 
       return res.status(200).json({ message: "Payment verified", bookedData });
     } else {
