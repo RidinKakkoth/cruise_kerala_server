@@ -38,9 +38,12 @@ const userSignUp = async (req, res) => {
         return res.status(400).json({ error: error.message });
       }
   
-
      const newPhone=parseInt(phone,10)
 
+     const isExist=await User.find({email:email})
+     if(isExist){
+      return res.status(400).json({ error: "User already exist" });
+     }
   
       let hashPassword = await bcrypt.hash(password, 10);
   
@@ -49,6 +52,7 @@ const userSignUp = async (req, res) => {
         email,
         password: hashPassword,
         phone:newPhone,
+        isVerified:true
 
       });
   
