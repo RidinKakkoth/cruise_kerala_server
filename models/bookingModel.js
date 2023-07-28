@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 const bookingSchema = new mongoose.Schema(
   {
     total: { type: Number, required: true },
+    fee: { type: Number, required: true },
+    tax: { type: Number, required: true },
+    partnerRevenue: { type: Number, required: true },
     checkIn: { type: Date, required: true },
     checkOut: { type: Date, required: true },
     guest: { type: Number, required: true },

@@ -1,6 +1,6 @@
 const mongoose=require("mongoose")
 const couponSchema=new mongoose.Schema({
-    offerName:{
+    offer:{
         type:String,
         required:true
     },
@@ -8,7 +8,7 @@ const couponSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-    discountPercentage:{
+    percentage:{
         type:Number,
         required:true
     },

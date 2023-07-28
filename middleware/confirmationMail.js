@@ -31,9 +31,11 @@ const sendBookingConfirmationEmail = async (email, bookingDetails) => {
             <p><strong>Booking Id:</strong> ${bookingDetails.bookingId}</p>
             <p><strong>Booking Id:</strong> ${bookingDetails.paymentId}</p>
             <p><strong>Cruise:</strong> ${bookingDetails.cruiseId.name}</p>
-            <p><strong>Boarding:</strong> ${formattedCheckInDate}</p>
+            <p><strong>Check-Out:</strong> ${formattedCheckInDate}</p>
             <p><strong>Check-In:</strong> ${formattedCheckOutDate}</p>
-            <p><strong>Check-Out:</strong> ${bookingDetails.cruiseId.boarding}</p>
+            <p><strong>Boarding:</strong> ${bookingDetails.cruiseId.boarding}</p>
+            <p><strong>Total:</strong>₹ ${bookingDetails.tax}</p>
+            <p><strong>Total:</strong>₹ ${bookingDetails.fee}</p>
             <p><strong>Total:</strong>₹ ${bookingDetails.total}</p>
 
           </div>

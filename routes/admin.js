@@ -14,7 +14,7 @@ const {
 const {
   cruiseApproval,
   addCategory,
-  getCategories,blockCruise,editCategory
+  getCategories,blockCruise,editCategory,addCoupon
 } = require("../controllers/cruiseController");
 
 router.post("/adminSignUp", adminSignUP);
@@ -41,7 +41,7 @@ router.get("/get-categories",isAdmin, getCategories);
 router.get('/get-notification',isAdmin,getNotification)
 router.delete('/delete-notification/:id',isAdmin,deleteNotification)
 
-router.post("/add-category",isAdmin, addCategory);
+router.post("/add-coupon",isAdmin, addCoupon);
 
 
 

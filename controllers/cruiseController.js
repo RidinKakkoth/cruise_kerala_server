@@ -312,16 +312,18 @@ const editCruiseData=async (req,res)=>{
 //<====================================== add coupon ===================================>
 const addCoupon = async (req, res) => {
   try {
-    const {offerName,description,discountPercentage,discount,couponCode,validFrom,validUpto,userLimit} = req.body;
+    const {offer,description,percentage,couponCode,validFrom,validUpto,userLimit} = req.body;
+    console.log(req.body);
    
-    const existing = await Offer.find({ name: couponCode });
+    const existing = await Coupon.find({ couponCode: couponCode });
 
     if (existing.length > 0) {
-      return res.status(400).json({ error: "Coupon already exists" });
+      return res.status(400).json({status:false, error: "Coupon already exists" });
     }
 
-    const savedCoupon = await Coupon.create({ offerName,description,discountPercentage,discount,couponCode,validFrom,validUpto,userLimit});
-    res.status(200).json({ message: "Success" });
+    const savedCoupon = await Coupon.create({ offer:offer
+      ,description,percentage,couponCode,validFrom,validUpto,userLimit});
+    res.status(200).json({status:true, message: "Success" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });

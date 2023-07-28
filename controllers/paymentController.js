@@ -21,7 +21,7 @@ try {
 
   const userId=verification(req)
 
-  const{totalAmount,guest,cruiseId,checkInDate,checkOutDate}=req.body
+  const{totalAmount,guest,cruiseId,checkInDate,checkOutDate,fee,tax}=req.body
 
   const guestNum=parseInt(guest)
 
@@ -43,6 +43,9 @@ const options = {
 
   const newBooking=new bookingModel({
     total:totalAmount,
+    fee,
+    tax,
+    partnerRevenue:totalAmount-fee-tax,
     checkIn:checkInDate,
     checkOut:checkOutDate,
     cruiseId,
