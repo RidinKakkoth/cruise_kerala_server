@@ -1,5 +1,6 @@
 const Partner=require('../models/partnerModel')
 const Booking=require('../models/bookingModel')
+const Cruise=require('../models/cruiseModel')
 const Notification=require("../models/notificationModel")
 const inputValidator=require("../middleware/validator")
 const cloudinary=require("../middleware/cloudinaryConfig")
@@ -343,7 +344,21 @@ const resetPass = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
+//<==================================== get single cruise data ==================================>
+
+const getSingleCruiseData=async(req,res)=>{
+  try {
+console.log(req.query);
+    const id=req.query.id
+console.log(id);
+    const data=await Cruise.findById({_id:id}).populate("category")
+ console.log(data);
+     res.send({data})
+
+} catch (error) {
+res.status(401).send({ error: "Unauthorized" });
+}
+}
 
 
-
-module.exports={partnerSignUp,resetPass,emailValid,getBookings,partnerSignin,getPartnerData,updateProfilePic,proofUpload,updateProfile}
+module.exports={partnerSignUp,resetPass,getSingleCruiseData,emailValid,getBookings,partnerSignin,getPartnerData,updateProfilePic,proofUpload,updateProfile}
