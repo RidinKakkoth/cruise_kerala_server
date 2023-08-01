@@ -4,7 +4,7 @@ const {isPartner}=require('../middleware/authentication')
 const upload=require("../middleware/multer")
 
 const { partnerSignUp, partnerSignin,resetPass, getPartnerData,getBookings, updateProfilePic,updateProfile, proofUpload,emailValid,getSingleCruiseData } = require("../controllers/partnerController");
-const{getPartnerCruiseData,addCruiseData,blockCruise,getCategories,}=require("../controllers/cruiseController")
+const{getPartnerCruiseData,addCruiseData,blockCruise,getCategories,editCruiseData}=require("../controllers/cruiseController")
 const{sendOTP,verifyOTP}=require('../controllers/otpController')
 
 
@@ -18,6 +18,10 @@ router.post('/add-cruise',isPartner, upload.fields([
     { name: 'license', maxCount: 1 },
     { name: 'images', maxCount: 5 } 
   ]),addCruiseData)
+
+router.post('/update-cruise',isPartner, upload.fields([
+    { name: 'images', maxCount: 5 } 
+  ]),editCruiseData)
 
   router.post("/sendOTP", sendOTP);
   router.post("/verifyOTP", verifyOTP);

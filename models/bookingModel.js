@@ -9,7 +9,7 @@ const bookingSchema = new mongoose.Schema(
     checkIn: { type: Date, required: true },
     checkOut: { type: Date, required: true },
     guest: { type: Number, required: true },
-    Discount: { type: Number },
+    discount: { type: Number },
     bookingId:{
         type:String
     },

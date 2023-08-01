@@ -348,11 +348,8 @@ const resetPass = async (req, res) => {
 
 const getSingleCruiseData=async(req,res)=>{
   try {
-console.log(req.query);
     const id=req.query.id
-console.log(id);
     const data=await Cruise.findById({_id:id}).populate("category")
- console.log(data);
      res.send({data})
 
 } catch (error) {

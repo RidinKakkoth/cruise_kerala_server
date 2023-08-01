@@ -2,6 +2,7 @@ const Razorpay = require("razorpay");
 const crypto = require('crypto');
 const jwt=require("jsonwebtoken");
 const bookingModel = require("../models/bookingModel");
+const Coupon = require("../models/couponModel");
 const sendBookingConfirmationEmail = require("../middleware/confirmationMail");
 
 const verification=(req)=>{
@@ -16,54 +17,52 @@ const verification=(req)=>{
 
 
 const orderCreate = async (req, res) => {
+  try {
+    const userId = verification(req);
+    const { totalAmount, guest, cruiseId, checkInDate, checkOutDate, fee, tax, discount } = req.body;
 
-try {
+    const guestNum = parseInt(guest);
+   
 
-  const userId=verification(req)
+    // Convert totalAmount and disc to paise (smallest currency unit)
 
-  const{totalAmount,guest,cruiseId,checkInDate,checkOutDate,fee,tax}=req.body
+    const amountInPaise = (totalAmount - discount) * 100;
 
-  const guestNum=parseInt(guest)
+    let instance = new Razorpay({ key_id: process.env.RZP_KEY_ID, key_secret: process.env.RZP_KEY_SECRET });
 
+    const options = {
+      amount: amountInPaise,
+      currency: "INR",
+      receipt: crypto.randomBytes(10).toString("hex"),
+    };
 
-  let instance = new Razorpay({ key_id: process.env.RZP_KEY_ID, key_secret:  process.env.RZP_KEY_SECRET })
+    instance.orders.create(options, (error, order) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).json("something went wrong!");
+      }
 
-const options = {
-  amount: totalAmount*100,  // amount in the smallest currency unit
-  currency: "INR",
-  receipt: crypto.randomBytes(10).toString("hex"),
-};
+      const newBooking = new bookingModel({
+        total: totalAmount - discount,
+        fee,
+        discount,
+        tax,
+        partnerRevenue: totalAmount - fee - tax,
+        checkIn: checkInDate,
+        checkOut: checkOutDate,
+        cruiseId,
+        guest: guestNum,
+        userId,
+        bookingId: order.id,
+      });
 
- instance.orders.create(options,(error,order)=>{
-  if(error){
+      const bookedData = newBooking.save();
+
+      res.status(200).json({ data: order, bookedData });
+    });
+  } catch (error) {
     console.log(error);
-    return res.status(500).json("something  went wrong!")
   }
- 
-
-  const newBooking=new bookingModel({
-    total:totalAmount,
-    fee,
-    tax,
-    partnerRevenue:totalAmount-fee-tax,
-    checkIn:checkInDate,
-    checkOut:checkOutDate,
-    cruiseId,
-    guest:guestNum,
-    userId,
-    bookingId:order.id
-
-  })
-
-  const bookedData=newBooking.save()
-
-  res.status(200).json({data:order,bookedData})
- }) 
-
-} catch (error) {
-  console.log(error);
-}
-
 };
 
 
@@ -76,6 +75,9 @@ const verify = async (req, res) => {
       razorpay_payment_id,
       razorpay_signature
     } = req.body;
+    const offerId=req.body.offerId
+    console.log(offerId,"offff");
+    console.log(razorpay_order_id,"qqqqqqq");
 
     const sign = razorpay_order_id + "|" + razorpay_payment_id;
     const expectedSign = crypto
@@ -93,9 +95,16 @@ const verify = async (req, res) => {
       bookingData.paymentStatus = true;
       bookingData.paymentId = razorpay_payment_id;
 
+      
       const bookedData = await bookingData.save();
-
-    
+      await Coupon.findByIdAndUpdate(
+        offerId,
+        {
+          $push: { users: { userId: bookingData.userId } },
+          $inc: { userLimit: -1 },
+        }
+      );
+          
       const email=bookedData.userId.email
       await sendBookingConfirmationEmail(email,bookedData)
 

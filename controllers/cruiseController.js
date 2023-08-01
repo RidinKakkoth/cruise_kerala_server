@@ -277,34 +277,34 @@ const cancelBooking=async(req,res)=>{
 const editCruiseData=async (req,res)=>{
   try {
     
-    const licenseFile = req.files.license[0].filename;
-    const imageFilenames = req.files.images.map((file) => file.filename);
+    // const licenseFile = req.files.license[0].filename;
+    // const imageFilenames = req.files.images.map((file) => file.filename);//===============>+++++++
+    // console.log(imageFilenames,"9999999999999999");
 
     const{ name,category,description,boarding,town,district,pin,rooms,baseRate,extraRate,maxGuest,AC,food,TV,partyHall,games,fishing,wifi,pets}=req.body
-    
-    const cruiseId=req.params.id
+ 
+    const updateData={
+      name,category,description,boarding,town,district,pin,rooms,baseRate,extraRate,maxGuest,
+      Facilities: [{AC,food, TV, pets, partyHall,fishing,games, wifi }]
+    }
+    const cruiseId=req.query.id
+    console.log(req.body,"bbbbbbbbbbbbbbbb");
+    console.log(req.body.partyHall,"000000000000");
 
     if(!cruiseId){
      return res.status(401).json({ error: 'Invalid ' });
     }
-    const cruiseData= await Cruise.findById({cruiseId})
-              Cruise.findByIdAndUpdate({ name,category,description,boarding,town,district,pin,rooms,baseRate,extraRate,maxGuest})
-    // const newCruise=new Cruise({
-    //   partnerId,name,category,description,boarding,town,district,pin,rooms,baseRate,extraRate,maxGuest,
-    //   Facilities: [{AC,food, TV, pets, partyHall,fishing,games, wifi }],
-    //   Images:imageFilenames,
-    //   Liscence:licenseFile
-    // })
-    
-   const addedCruise= await cruiseData.save()
+    // const cruiseData= await Cruise.findById({cruiseId})
+         const updatedCruise = await   Cruise.findByIdAndUpdate(cruiseId,{$set:updateData},{ new: true })
+
 
    await Notification.create({
     message:'Partner added new cruise',
-    notification:`Partner updated ${cruiseData.name} details `,
+    notification:`Partner updated ${updatedCruise.name} details `,
     status:'warning'
   })
-   if(addedCruise)
-   res.status(200).send({success:true,message:"success"})
+   if(updatedCruise)
+   res.status(200).send({status:true,message:"success"})
 
   } catch (error) {
     res.status(500).json({error:'Internal server error'});
@@ -313,7 +313,7 @@ const editCruiseData=async (req,res)=>{
 //<====================================== add coupon ===================================>
 const addCoupon = async (req, res) => {
   try {
-    const {offer,description,percentage,couponCode,validFrom,validUpto,userLimit} = req.body;
+    const {offer,description,discount,couponCode,validFrom,validUpto,userLimit} = req.body;
     console.log(req.body);
    
     const existing = await Coupon.find({ couponCode: couponCode });
@@ -323,7 +323,7 @@ const addCoupon = async (req, res) => {
     }
 
     const savedCoupon = await Coupon.create({ offer:offer
-      ,description,percentage,couponCode,validFrom,validUpto,userLimit});
+      ,description,discount,couponCode,validFrom,validUpto,userLimit});
     res.status(200).json({status:true, message: "Success" });
   } catch (error) {
     console.error(error);
@@ -333,4 +333,4 @@ const addCoupon = async (req, res) => {
 
 
 
-module.exports={singleView,getPartnerCruiseData,getCruiseData,addCoupon,addCruiseData,blockCruise,cruiseApproval,addCategory,getCategories,editCategory,cancelBooking}
+module.exports={singleView,getPartnerCruiseData,getCruiseData,editCruiseData,addCoupon,addCruiseData,blockCruise,cruiseApproval,addCategory,getCategories,editCategory,cancelBooking}

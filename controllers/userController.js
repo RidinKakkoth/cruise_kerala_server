@@ -1,6 +1,7 @@
 const User=require('../models/userModel')
 const Booking=require('../models/bookingModel')
 const Cruise=require('../models/cruiseModel')
+const Coupon=require('../models/couponModel')
 const inputValidator=require("../middleware/validator")
 
 const bcrypt = require("bcrypt");
@@ -347,8 +348,41 @@ const resetPass = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
+const applyCoupon = async (req, res) => {
+  try {
+    const { coupon } = req.body;
+   const userId=verification(req)
+
+   const isUserExist=await Coupon.findOne({ couponCode: coupon,users: { $elemMatch: { userId } } })
+   if(isUserExist){
+    return res.status(404).json({ message: 'Coupon already used' });
+
+   }
+
+    const offer = await Coupon.findOne({ couponCode: coupon });
+
+    if (!offer) {
+      return res.status(404).json({ message: 'Coupon not valid' });
+    }
+
+    const currentDate = new Date();
+
+    if (currentDate < offer.validFrom || currentDate > offer.validUpto) {
+      return res.status(400).json({ message: 'Coupon is not valid' });
+    }
+    if (offer.userLimit===0) {
+      return res.status(400).json({ message: 'Coupon limit reached' });
+    }
+
+    res.status(200).json({status:true, message: 'Coupon is valid',offer });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
 
 
 
-module.exports={userSignUp,userSignin,userData,getBookings,bookedDates,addReview,updateProfile,updateProfilePic,emailValid,resetPass}
+
+module.exports={userSignUp,userSignin,userData,getBookings,bookedDates,addReview,updateProfile,updateProfilePic,emailValid,resetPass,applyCoupon}

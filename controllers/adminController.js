@@ -2,6 +2,7 @@ const Admin = require("../models/adminModel");
 const Cruise=require("../models/cruiseModel")
 const Partner = require("../models/partnerModel");
 const Category = require("../models/categoryModel");
+const Coupon = require("../models/couponModel");
 const Notification = require("../models/notificationModel");
 const User = require("../models/userModel");
 const Booking = require("../models/bookingModel");
@@ -288,6 +289,20 @@ const getNotification=async(req,res)=>{
     res.status(401).send({ error: "Unauthorized" });
   }
 }
+const getCouponData=async(req,res)=>{
+  try {
+    
+    const data=await Coupon.find()
+
+     if(!data){
+      return res.status(404).json({error:" not found"})
+     }
+     res.send({data})
+    
+  } catch (error) {
+    res.status(401).send({ error: "Unauthorized" });
+  }
+}
 
 const deleteNotification = async (req, res) => {
   try {
@@ -311,7 +326,30 @@ const deleteNotification = async (req, res) => {
   }
 };
 
+const blockCoupon = async (req, res) => {
+  try {
+    const couponId = req.query.id;
 
+
+    if (!couponId) {
+      return res.status(404).json({ error: "invalid" });
+    }
+    const couponData = await Coupon.findById(couponId);
+
+    if (!couponData) {
+      return res.status(404).json({ error: "coupon not found" });
+    }
+
+    couponData.isBlock = !couponData.isBlock;
+    const updateData = await couponData.save();
+  
+
+    res.status(200).json({status:true, message: "success" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 
 
@@ -329,5 +367,7 @@ module.exports = {
   getUserData,
   getCruiseData,
   getNotification,
-  deleteNotification
+  deleteNotification,
+  getCouponData,
+  blockCoupon
 };

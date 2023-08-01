@@ -8,7 +8,7 @@ const couponSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-    percentage:{
+    discount:{
         type:Number,
         required:true
     },
@@ -26,12 +26,17 @@ const couponSchema=new mongoose.Schema({
     },
     userLimit:{
         type:Number,
+        min:0,
         required:true
     },
     isBlock:{
         type:Boolean,
         default:false
-    }
+    },
+    users:[
+       {userId: {type:mongoose.Schema.Types.ObjectId,
+            ref:"User"}
+    }]
 
 
 },{timestamps:true})
