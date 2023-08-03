@@ -9,12 +9,12 @@ const {
   getCruiseData,
   blockPartner,
   partnerApproval,
-  getPartnerProfile,getBookings,getUserData,blockUser,getNotification,deleteNotification,getCouponData,blockCoupon
+  getPartnerProfile,getPartnerCruiseData,getBookings,getUserData,blockUser,getNotification,deleteNotification,getCouponData,blockCoupon,deleteCoupon,addCoupon
 } = require("../controllers/adminController");
 const {
   cruiseApproval,
   addCategory,
-  getCategories,blockCruise,editCategory,addCoupon
+  getCategories,blockCruise,editCategory
 } = require("../controllers/cruiseController");
 
 router.post("/adminSignUp", adminSignUP);
@@ -23,6 +23,7 @@ router.post("/adminSignin", adminSignin);
 router.get("/getPartnerData",isAdmin, getPartnerData);
 router.get('/getPartnerProfile',isAdmin, getPartnerData);
 router.get("/getPartnerProfileData",isAdmin, getPartnerProfile);
+router.get("/partner-cruise-data",isAdmin, getPartnerCruiseData);
 router.patch("/blockPartner",isAdmin, blockPartner);// patch
 router.patch("/partner-approval",isAdmin, partnerApproval);//patch
 
@@ -44,6 +45,7 @@ router.delete('/delete-notification/:id',isAdmin,deleteNotification)
 router.post("/add-coupon",isAdmin, addCoupon);
 router.get("/get-coupon-data",isAdmin, getCouponData);
 router.patch("/blockCoupon",isAdmin, blockCoupon);// patch
+router.patch("/delete-coupon",isAdmin, deleteCoupon);// patch
 
 
 

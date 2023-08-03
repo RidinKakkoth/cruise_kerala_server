@@ -278,16 +278,20 @@ const updateProfile=async(req,res)=>{
 const getBookings = async (req, res) => {
   try {
 
-    const partnerId=req.id
-
+    const partnerId = req.id;
+    
     const bookingData = await Booking.find({ paymentStatus: true })
-      .populate('cruiseId').populate("userId")
-const data=await bookingData.filter((value)=>{
- return value.cruiseId.partnerId.toHexString()===partnerId
-})
-
-
-
+      .populate('cruiseId').populate("userId");
+    
+    const data = bookingData.filter((value) => {
+      const cruisePartnerId = value.cruiseId.partnerId.toString(); // Convert ObjectId to string
+      const requestedPartnerId = partnerId.toString(); // Convert ObjectId to string
+      if (cruisePartnerId === requestedPartnerId) {
+        return true;
+      }
+      return false;
+    });
+    
 
     if (data) {
       res.json({ data });

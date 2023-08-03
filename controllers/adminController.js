@@ -11,16 +11,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { findOneAndDelete } = require("../models/notificationModel");
 
-// const verification = (req) => {
-//   const jwtToken = req.cookies.adminCookie.token;
-
-//   const decodedToken = jwt.verify(jwtToken, "secretCodeforAdmin");
-
-//   const adminId = decodedToken.id;
-
-//   return adminId;
-// };
-
 const adminSignUP = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -303,6 +293,23 @@ const getCouponData=async(req,res)=>{
     res.status(401).send({ error: "Unauthorized" });
   }
 }
+//<========================= getPartnerCruiseData ============================>
+
+const getPartnerCruiseData=async(req,res)=>{
+  try {
+    const partnerId=req.query.id
+
+    const data=await Cruise.find({partnerId})
+
+     if(!data){
+      return res.status(404).json({error:" not found"})
+     }
+     res.send(data)
+    
+  } catch (error) {
+    res.status(401).send({ error: "Unauthorized" });
+  }
+}
 
 const deleteNotification = async (req, res) => {
   try {
@@ -325,6 +332,27 @@ const deleteNotification = async (req, res) => {
     return res.status(500).json({ error: "An error occurred while deleting the notification." });
   }
 };
+//<====================================== add coupon ===================================>
+const addCoupon = async (req, res) => {
+  try {
+    const {offer,description,discount,couponCode,validFrom,validUpto,userLimit} = req.body;
+   
+    const existing = await Coupon.find({ couponCode: couponCode });
+
+    if (existing.length > 0) {
+      return res.status(400).json({status:false, error: "Coupon already exists" });
+    }
+
+    const savedCoupon = await Coupon.create({ offer:offer
+      ,description,discount,couponCode,validFrom,validUpto,userLimit});
+    res.status(200).json({status:true, message: "Success" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
 
 const blockCoupon = async (req, res) => {
   try {
@@ -350,6 +378,25 @@ const blockCoupon = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+const deleteCoupon = async (req, res) => {
+  try {
+    const couponId = req.query.id;
+
+    if (!couponId) {
+      return res.status(404).json({ error: "invalid" });
+    }
+    const couponData = await Coupon.findByIdAndDelete(couponId);
+
+    if (!couponData) {
+      return res.status(404).json({ error: "coupon not found" });
+    }  
+
+    res.status(200).json({status:true, message: "success" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 
 
@@ -360,6 +407,7 @@ module.exports = {
   adminSignin,
   getPartnerData,
   partnerApproval,
+  getPartnerCruiseData,
   blockPartner,
   blockUser,
   getPartnerProfile,
@@ -369,5 +417,7 @@ module.exports = {
   getNotification,
   deleteNotification,
   getCouponData,
-  blockCoupon
+  addCoupon,
+  blockCoupon,
+  deleteCoupon
 };

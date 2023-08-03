@@ -300,27 +300,6 @@ const editCruiseData=async (req,res)=>{
     res.status(500).json({error:'Internal server error'});
   }
 }
-//<====================================== add coupon ===================================>
-const addCoupon = async (req, res) => {
-  try {
-    const {offer,description,discount,couponCode,validFrom,validUpto,userLimit} = req.body;
-    console.log(req.body);
-   
-    const existing = await Coupon.find({ couponCode: couponCode });
-
-    if (existing.length > 0) {
-      return res.status(400).json({status:false, error: "Coupon already exists" });
-    }
-
-    const savedCoupon = await Coupon.create({ offer:offer
-      ,description,discount,couponCode,validFrom,validUpto,userLimit});
-    res.status(200).json({status:true, message: "Success" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
 
 
-
-module.exports={singleView,getPartnerCruiseData,getCruiseData,editCruiseData,addCoupon,addCruiseData,blockCruise,cruiseApproval,addCategory,getCategories,editCategory,cancelBooking}
+module.exports={singleView,getPartnerCruiseData,getCruiseData,editCruiseData,addCruiseData,blockCruise,cruiseApproval,addCategory,getCategories,editCategory,cancelBooking}
