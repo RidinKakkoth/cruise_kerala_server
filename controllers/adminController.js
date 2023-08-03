@@ -11,15 +11,15 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { findOneAndDelete } = require("../models/notificationModel");
 
-const verification = (req) => {
-  const jwtToken = req.cookies.adminCookie.token;
+// const verification = (req) => {
+//   const jwtToken = req.cookies.adminCookie.token;
 
-  const decodedToken = jwt.verify(jwtToken, "secretCodeforAdmin");
+//   const decodedToken = jwt.verify(jwtToken, "secretCodeforAdmin");
 
-  const adminId = decodedToken.id;
+//   const adminId = decodedToken.id;
 
-  return adminId;
-};
+//   return adminId;
+// };
 
 const adminSignUP = async (req, res) => {
   try {

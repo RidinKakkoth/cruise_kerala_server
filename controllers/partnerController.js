@@ -7,17 +7,7 @@ const cloudinary=require("../middleware/cloudinaryConfig")
 
 const bcrypt = require("bcrypt");
 const jwt=require("jsonwebtoken")
-// SECRET=process.env.PARTNER_SECRET_KEY
 
-const verification=(req)=>{
-  const jwtToken=req.cookies.partnerCookie.token
-
-  const decodedToken=jwt.verify(jwtToken,"secretCodeforPartner")
-
-  const partnerId=decodedToken.id
-
-  return partnerId
-}
 
 const partnerSignUp = async (req, res) => {
     try {
@@ -135,7 +125,8 @@ const partnerSignin=async(req,res)=>{
 const getPartnerData=async(req,res)=>{
   try {
 
-const partnerId=verification(req)
+const partnerId=req.id
+
 
 try {
 
@@ -162,7 +153,7 @@ try {
 const updateProfilePic= async(req,res)=>{
 
   try {
-    const partnerId=verification(req)
+    const partnerId=req.id
 
         if(!partnerId){
           throw new Error("Invalid Token")
@@ -201,7 +192,7 @@ const updateProfilePic= async(req,res)=>{
 const proofUpload=async(req,res)=>{
   try {
 
-    const partnerId=verification(req)
+    const partnerId=req.id
 
     if(!partnerId){
       throw new Error("Invalid Token")
@@ -252,7 +243,7 @@ const updateProfile=async(req,res)=>{
     const {name,email,companyName,phone}=req.body
     
 
-    const partnerId=verification(req)
+    const partnerId=req.id
 
     if(!partnerId){
       throw new Error("Invalid Token")
@@ -287,7 +278,7 @@ const updateProfile=async(req,res)=>{
 const getBookings = async (req, res) => {
   try {
 
-    const partnerId=verification(req)
+    const partnerId=req.id
 
     const bookingData = await Booking.find({ paymentStatus: true })
       .populate('cruiseId').populate("userId")

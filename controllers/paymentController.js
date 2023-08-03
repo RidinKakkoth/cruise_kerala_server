@@ -5,20 +5,12 @@ const bookingModel = require("../models/bookingModel");
 const Coupon = require("../models/couponModel");
 const sendBookingConfirmationEmail = require("../middleware/confirmationMail");
 
-const verification=(req)=>{
-  const jwtToken=req.cookies.userCookie.token
-
-  const decodedToken=jwt.verify(jwtToken,"secretCodeforUser")
-
-  const userId=decodedToken.id
-
-  return userId
-}
-
 
 const orderCreate = async (req, res) => {
   try {
-    const userId = verification(req);
+
+    const userId=req.id
+
     const { totalAmount, guest, cruiseId, checkInDate, checkOutDate, fee, tax, discount } = req.body;
 
     const guestNum = parseInt(guest);

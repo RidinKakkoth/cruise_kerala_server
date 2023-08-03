@@ -15,6 +15,7 @@ const isAdmin =async (req, res, next) => {
 
 
     if (isFound) {
+      req.id=isFound._id
       next(); 
     } else {
       res.status(401).json({ message: "Unauthorized" });
@@ -37,6 +38,7 @@ const isPartner =async (req, res, next) => {
     const isFound=await Partner.findById(partnerId).select('-password')
 
     if (isFound) {
+      req.id=isFound._id
       next(); 
     } else {
       res.status(401).json({ message: "Unauthorized" });
@@ -60,8 +62,7 @@ const isUser =async (req, res, next) => {
     const isFound=await User.findById(userId).select('-password')
     
     if (isFound) {
-
-
+      req.id=isFound._id
       next(); 
     } else {
       res.status(401).json({ message: "Unauthorized" });

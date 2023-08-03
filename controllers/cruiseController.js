@@ -7,25 +7,11 @@ const Coupon=require("../models/couponModel")
 const cloudinary=require("../middleware/cloudinaryConfig")
 const jwt=require("jsonwebtoken")
 
-const verification=(req)=>{
-    const jwtToken=req.cookies.partnerCookie.token
-  
-    const decodedToken=jwt.verify(jwtToken,"secretCodeforPartner")
-  
-    const partnerId=decodedToken.id
-  
-    return partnerId
-  }
-
 const addCruiseData=async (req,res)=>{
     try {
       
       const licenseFile = req.files.license[0].path;
-      // const licenseFile = req.files.license[0].filename;
-      // const imageFilenames = req.files.images.map((file) => file.filename);
          const imageFilenames = req.files.images
-    
-        //  console.log(imageFilenames,licenseFile);
 
        const Images = [];
 
@@ -37,19 +23,22 @@ const addCruiseData=async (req,res)=>{
       const licenseResult=await cloudinary.uploader.upload(licenseFile)
       
       const{ name,category,description,boarding,town,district,pin,rooms,baseRate,extraRate,maxGuest,AC,food,TV,partyHall,games,fishing,wifi,pets}=req.body
-      const partnerId=verification(req)
+      const partnerId=req.id
       if(!partnerId){
        return res.status(401).json({ error: 'Invalid token' });
       }
       const partnerData= await Partner.findById(partnerId)
-      const newCruise=new Cruise({
-        partnerId,name,category,description,boarding,town,district,pin,rooms,baseRate,extraRate,maxGuest,
-        Facilities: [{AC,food, TV, pets, partyHall,fishing,games, wifi }],
-        Images,
-        Liscence:licenseResult.secure_url
-      })
       
-     const addedCruise= await newCruise.save()
+
+        const newCruise=new Cruise({
+          partnerId,name,category,description,boarding,town,district,pin,rooms,baseRate,extraRate,maxGuest,
+          Facilities: [{AC,food, TV, pets, partyHall,fishing,games, wifi }],
+          Images,
+          Liscence:licenseResult.secure_url
+        })
+        
+       const addedCruise= await newCruise.save()
+     
 
      await Notification.create({
       message:'Partner added new cruise',
@@ -68,17 +57,19 @@ const addCruiseData=async (req,res)=>{
 const getPartnerCruiseData=async(req,res)=>{
     try {
 
-        const partnerId=verification(req)
+        const partnerId=req.id
+
       
         if(!partnerId){
           return  res.status(401).json({ error: 'Invalid token' });
            }
+           const partner=await Partner.findById(partnerId)
 
           const cruiseData=await Cruise.find({partnerId}).populate('category')
           if(!cruiseData){
             return res.status(404).json({error:"not found"})
           }
-          return res.status(200).json({cruiseData})
+          return res.status(200).json({cruiseData,partner})
 
         
     } catch (error) {
@@ -122,7 +113,6 @@ const blockCruise=async(req,res)=>{
 
 const getCruiseData=async(req,res)=>{
   try {
-
 
     const data=await Cruise.find({ isBlocked:false, isApproved:"verified"}).populate("category")
 
