@@ -4,7 +4,7 @@ const {isUser}=require('../middleware/authentication')
 const upload=require("../middleware/multer")
 
 
-const{userSignUp,userSignin,userData,getBookings,bookedDates,addReview,updateProfile,updateProfilePic,emailValid,resetPass,applyCoupon}=require('../controllers/userController')
+const{userSignUp,userSignin,userData,getBookings,bookedDates,addReview,updateProfile,updateProfilePic,emailValid,resetPass,applyCoupon,getCruiseOffer}=require('../controllers/userController')
 const{singleView,getCruiseData,cancelBooking}=require('../controllers/cruiseController')
 const{orderCreate,verify}=require('../controllers/paymentController')
 const{sendOTP,verifyOTP}=require('../controllers/otpController')
@@ -31,6 +31,7 @@ router.post("/apply-coupon", applyCoupon);
 router.patch('/cancel-booking/:id',isUser,cancelBooking)
 
 
+router.get("/get-cruise-offer",getCruiseOffer);
 
 router.post('/orders',isUser,orderCreate)
 router.post('/verify',isUser,verify)

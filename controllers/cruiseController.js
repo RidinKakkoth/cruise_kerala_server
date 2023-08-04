@@ -28,7 +28,6 @@ const addCruiseData=async (req,res)=>{
        return res.status(401).json({ error: 'Invalid token' });
       }
       const partnerData= await Partner.findById(partnerId)
-      
 
         const newCruise=new Cruise({
           partnerId,name,category,description,boarding,town,district,pin,rooms,baseRate,extraRate,maxGuest,
@@ -36,17 +35,19 @@ const addCruiseData=async (req,res)=>{
           Images,
           Liscence:licenseResult.secure_url
         })
+        const addedCruise= await newCruise.save()
         
-       const addedCruise= await newCruise.save()
-     
+        
+        const x= await Notification.create({
+          message:'Partner added new cruise',
+          notification:`Partner ${partnerData.name} added new cruise ${newCruise.name} `,
+          status:'warning'
+        })
 
-     await Notification.create({
-      message:'Partner added new cruise',
-      notification:`Partner ${partnerData.name} added new cruise ${newCruise.name} `,
-      status:'warning'
-    })
      if(addedCruise)
-     res.status(200).send({status:true,message:"success"})
+    { 
+    
+     return res.send({status:true,message:"success"})}
 
     } catch (error) {
       res.status(500).json({error:'Internal server error'});
@@ -278,8 +279,6 @@ const editCruiseData=async (req,res)=>{
       Facilities: [{AC,food, TV, pets, partyHall,fishing,games, wifi }]
     }
     const cruiseId=req.query.id
-    console.log(req.body,"bbbbbbbbbbbbbbbb");
-    console.log(req.body.partyHall,"000000000000");
 
     if(!cruiseId){
      return res.status(401).json({ error: 'Invalid ' });

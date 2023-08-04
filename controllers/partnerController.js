@@ -1,6 +1,7 @@
 const Partner=require('../models/partnerModel')
 const Booking=require('../models/bookingModel')
 const Cruise=require('../models/cruiseModel')
+const Offer=require('../models/OfferModel')
 const Notification=require("../models/notificationModel")
 const inputValidator=require("../middleware/validator")
 const cloudinary=require("../middleware/cloudinaryConfig")
@@ -345,12 +346,94 @@ const getSingleCruiseData=async(req,res)=>{
   try {
     const id=req.query.id
     const data=await Cruise.findById({_id:id}).populate("category")
-     res.send({data})
-
-} catch (error) {
-res.status(401).send({ error: "Unauthorized" });
+    res.send({data})
+    
+  } catch (error) {
+    res.status(401).send({ error: "Unauthorized" });
+  }
 }
+//<==================================== add offer ==================================>
+
+const addOffer = async (req, res) => {
+  try {
+    const {offerName,cruiseId,description,percentage,startDate,endDate} = req.body;
+    const partnerId=req.id
+    
+    const existing = await Offer.find({ offerName: offerName,cruiseId:cruiseId })
+    if (existing.length > 0) {
+      return res.status(400).json({status:false, error: "offer already exists" });
+    }
+    
+    const savedCoupon = await Offer.create({offerName,cruiseId,description,percentage,startDate,endDate,partnerId});
+    res.status(200).json({status:true, message: "Success" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+//<==================================== get offer ==================================>
+const getOffer=async(req,res)=>{
+  try {
+    
+    const partnerId=req.id
+    
+    const data=await Offer.find({partnerId:partnerId}).populate("cruiseId")
+    
+    if(!data){
+      return res.status(404).json({error:" not found"})
+    }
+    res.send({data})
+    
+  } catch (error) {
+    res.status(401).send({ error: "Unauthorized" });
+  }
 }
+//<==================================== block offer ==================================>
+
+const blockOffer = async (req, res) => {
+  try {
+    const offerId = req.query.id;
+    
+    if (!offerId) {
+      return res.status(404).json({ error: "invalid" });
+    }
+    const offerData = await Offer.findById(offerId);
+
+    if (!offerData) {
+      return res.status(404).json({ error: "offer not found" });
+    }
+
+    offerData.isBlock = !offerData.isBlock;
+    const updateData = await offerData.save();
+  
+
+    res.status(200).json({status:true, message: "success" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+const deleteOffer = async (req, res) => {
+  try {
+    const offerId = req.query.id;
+
+    if (!offerId) {
+      return res.status(404).json({ error: "invalid" });
+    }
+    const offerData = await Offer.findByIdAndDelete(offerId);
+
+    if (!offerData) {
+      return res.status(404).json({ error: "coupon not found" });
+    }  
+
+    res.status(200).json({status:true, message: "success" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 
-module.exports={partnerSignUp,resetPass,getSingleCruiseData,emailValid,getBookings,partnerSignin,getPartnerData,updateProfilePic,proofUpload,updateProfile}
+
+module.exports={partnerSignUp,resetPass,getSingleCruiseData,emailValid,getBookings,partnerSignin,getPartnerData,updateProfilePic,proofUpload,updateProfile,addOffer,getOffer,blockOffer,deleteOffer}

@@ -1,6 +1,7 @@
 const User=require('../models/userModel')
 const Booking=require('../models/bookingModel')
 const Cruise=require('../models/cruiseModel')
+const Offer=require('../models/OfferModel')
 const Coupon=require('../models/couponModel')
 const inputValidator=require("../middleware/validator")
 
@@ -381,8 +382,28 @@ const applyCoupon = async (req, res) => {
   }
 };
 
+const getCruiseOffer = async (req, res) => {
+  try {
+    const cruiseId = req.query.id;
+
+    const currentDate = new Date();
+
+    const offerData = await Offer.findOne({
+      cruiseId: cruiseId,
+      endDate: { $gt: currentDate }
+    }).limit(1)
+
+   
+    if (offerData) {
+      res.json({ offerData });
+    } else {
+      return res.status(404).json({ error: "offer data not found" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
 
 
-
-module.exports={userSignUp,userSignin,userData,getBookings,bookedDates,addReview,updateProfile,updateProfilePic,emailValid,resetPass,applyCoupon}
+module.exports={userSignUp,userSignin,userData,getBookings,bookedDates,addReview,updateProfile,updateProfilePic,emailValid,resetPass,getCruiseOffer,applyCoupon}
