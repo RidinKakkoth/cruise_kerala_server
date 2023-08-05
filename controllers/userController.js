@@ -390,7 +390,8 @@ const getCruiseOffer = async (req, res) => {
 
     const offerData = await Offer.findOne({
       cruiseId: cruiseId,
-      endDate: { $gt: currentDate }
+      endDate: { $gte: currentDate },
+      startDate: { $lte: currentDate }
     }).limit(1)
 
    
@@ -402,8 +403,30 @@ const getCruiseOffer = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: "Internal Server Error" });
   }
+}
+
+const getCouponData = async (req, res) => {
+  try {
+
+    const currentDate = new Date();
+    const couponData = await Coupon.find({ 
+      validUpto: { $gte: currentDate },
+      validFrom: { $lte: currentDate }
+    }).limit(1);
+    
+    console.log(couponData,"cccccccccc");
+
+   
+    if (couponData) {
+      res.json({ couponData });
+    } else {
+      return res.status(404).json({ error: "offer data not found" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
 
 
-module.exports={userSignUp,userSignin,userData,getBookings,bookedDates,addReview,updateProfile,updateProfilePic,emailValid,resetPass,getCruiseOffer,applyCoupon}
+module.exports={userSignUp,userSignin,userData,getBookings,bookedDates,addReview,updateProfile,updateProfilePic,emailValid,resetPass,getCruiseOffer,getCouponData,applyCoupon}
