@@ -245,23 +245,6 @@ const singleView=async(req,res)=>{
        res.status(500).json({ error: "Internal server error" });
      }
 }
-//<==================================== cancel booking ==================================>
-const cancelBooking=async(req,res)=>{
-  try {
-
-    const bookingId=req.params.id
-
-    const bookingData=await Booking.findById(bookingId)
-    if(!bookingData){
-      return res.status(404).json({error:"booking not found"})
-    }
-    bookingData.status="Cancelled"
-    bookingData.save()
-    res.status(200).json({ bookingData });
-  } catch (error) {
-    console.log(error);
-  }
-}
 
 //<==================================== edit cruise data ==================================>
 
@@ -301,4 +284,4 @@ const editCruiseData=async (req,res)=>{
 }
 
 
-module.exports={singleView,getPartnerCruiseData,getCruiseData,editCruiseData,addCruiseData,blockCruise,cruiseApproval,addCategory,getCategories,editCategory,cancelBooking}
+module.exports={singleView,getPartnerCruiseData,getCruiseData,editCruiseData,addCruiseData,blockCruise,cruiseApproval,addCategory,getCategories,editCategory}

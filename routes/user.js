@@ -4,8 +4,8 @@ const {isUser}=require('../middleware/authentication')
 const upload=require("../middleware/multer")
 
 
-const{userSignUp,userSignin,userData,getBookings,bookedDates,addReview,updateProfile,updateProfilePic,emailValid,resetPass,applyCoupon,getCouponData,getCruiseOffer}=require('../controllers/userController')
-const{singleView,getCruiseData,cancelBooking}=require('../controllers/cruiseController')
+const{userSignUp,userSignin,userData,getBookings,bookedDates,cancelBooking,addReview,updateProfile,updateProfilePic,emailValid,resetPass,applyCoupon,getCouponData,getCruiseOffer}=require('../controllers/userController')
+const{singleView,getCruiseData}=require('../controllers/cruiseController')
 const{orderCreate,verify}=require('../controllers/paymentController')
 const{sendOTP,verifyOTP}=require('../controllers/otpController')
 

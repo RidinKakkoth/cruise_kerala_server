@@ -434,6 +434,24 @@ const deleteOffer = async (req, res) => {
   }
 };
 
+//<==================================== cancel booking ==================================>
+const cancelBooking=async(req,res)=>{
+  try {
+
+    const bookingId=req.query.id
 
 
-module.exports={partnerSignUp,resetPass,getSingleCruiseData,emailValid,getBookings,partnerSignin,getPartnerData,updateProfilePic,proofUpload,updateProfile,addOffer,getOffer,blockOffer,deleteOffer}
+    const bookingData=await Booking.findById(bookingId)
+    if(!bookingData){
+      return res.status(404).json({error:"booking not found"})
+    }
+    bookingData.status="Cancelled"
+    bookingData.save()
+    res.status(200).json({ bookingData });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+module.exports={partnerSignUp,resetPass,getSingleCruiseData,cancelBooking,emailValid,getBookings,partnerSignin,getPartnerData,updateProfilePic,proofUpload,updateProfile,addOffer,getOffer,blockOffer,deleteOffer}

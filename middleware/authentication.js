@@ -8,7 +8,7 @@ const isAdmin =async (req, res, next) => {
   try {
     const jwtToken = req.cookies.adminCookie.token;
 
-    const decodedToken = jwt.verify(jwtToken, "secretCodeforAdmin");
+    const decodedToken = jwt.verify(jwtToken, process.env.ADMIN_SECRET_KEY);
     const adminId = decodedToken.id;
 
     const isFound=await Admin.findById(adminId).select('-password')
@@ -31,7 +31,7 @@ const isPartner =async (req, res, next) => {
 
    
     const jwtToken = req.cookies.partnerCookie.token;
-    const decodedToken = jwt.verify(jwtToken, "secretCodeforPartner");
+    const decodedToken = jwt.verify(jwtToken, process.env.PARTNER_SECRET_KEY);
     const partnerId = decodedToken.id;
 
 
@@ -55,7 +55,7 @@ const isUser =async (req, res, next) => {
 
     
     const jwtToken = req.cookies.userCookie.token;
-    const decodedToken = jwt.verify(jwtToken, "secretCodeforUser");
+    const decodedToken = jwt.verify(jwtToken, process.env.USER_SECRET_KEY);
     const userId = decodedToken.id;
     
     

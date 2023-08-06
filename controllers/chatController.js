@@ -10,7 +10,7 @@ const userVerification=(req,res)=>{
       }
     const jwtToken=req.cookies.userCookie.token
   
-    const decodedToken=jwt.verify(jwtToken,"secretCodeforUser")
+    const decodedToken=jwt.verify(jwtToken,process.env.USER_SECRET_KEY)
   
     const userId=decodedToken.id
   
@@ -23,7 +23,7 @@ const userVerification=(req,res)=>{
       }
     const jwtToken = req.cookies.adminCookie.token;
   
-    const decodedToken = jwt.verify(jwtToken, "secretCodeforAdmin");
+    const decodedToken = jwt.verify(jwtToken, process.env.ADMIN_SECRET_KEY);
   
     const adminId = decodedToken.id;
   

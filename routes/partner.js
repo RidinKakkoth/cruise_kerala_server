@@ -3,7 +3,7 @@ const router = express.Router();
 const {isPartner}=require('../middleware/authentication')
 const upload=require("../middleware/multer")
 
-const { partnerSignUp, partnerSignin,resetPass, getPartnerData,getBookings, updateProfilePic,updateProfile, proofUpload,emailValid,getSingleCruiseData,addOffer,getOffer,blockOffer,deleteOffer } = require("../controllers/partnerController");
+const { partnerSignUp, partnerSignin,resetPass, getPartnerData,getBookings, updateProfilePic,updateProfile, proofUpload,emailValid,getSingleCruiseData,addOffer,getOffer,blockOffer,deleteOffer,cancelBooking } = require("../controllers/partnerController");
 const{getPartnerCruiseData,addCruiseData,blockCruise,getCategories,editCruiseData}=require("../controllers/cruiseController")
 const{sendOTP,verifyOTP}=require('../controllers/otpController')
 
@@ -27,6 +27,8 @@ router.post('/update-cruise',isPartner, upload.fields([
   router.post("/verifyOTP", verifyOTP);
   router.get("/emailTest", emailValid);
   router.post("/resetPassword", resetPass);
+  router.patch('/cancel-booking',isPartner,cancelBooking)
+
 
 router.get("/get-categories",isPartner, getCategories);
 router.get('/cruise-data',isPartner,getPartnerCruiseData)

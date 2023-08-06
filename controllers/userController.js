@@ -12,17 +12,6 @@ const bookingModel = require('../models/bookingModel');
 const cloudinary=require("../middleware/cloudinaryConfig")
 
 
-// SECRET=process.env.USER_SECRET_KEY
-
-const verification=(req)=>{
-  const jwtToken=req.cookies.userCookie.token
-
-  const decodedToken=jwt.verify(jwtToken,"secretCodeforUser")
-
-  const userId=decodedToken.id
-
-  return userId
-}
 
   //============================================================================================
 
@@ -148,7 +137,8 @@ const userData=async(req,res)=>{
       
     }
     
-    const userId=verification(req)
+    const userId=req.id
+    // const userId=verification(req)
 
     try {
     
@@ -174,7 +164,8 @@ const userData=async(req,res)=>{
 
 const getBookings = async (req, res) => {
   try {
-    const userId = verification(req);
+    const userId = req.id
+    // const userId = verification(req);
 
     const bookingData = await Booking.find({
       userId: userId,
@@ -218,7 +209,8 @@ const bookedDates=async (req,res)=>{
 const addReview=async(req,res)=>{
   try {
 
-    const userId=verification(req)
+    const userId=req.id
+    // const userId=verification(req)
     const{star,feedback,cruiseId}=req.body
     
     const cruiseData=await Cruise.findById(cruiseId)
@@ -250,7 +242,8 @@ const updateProfile=async(req,res)=>{
 
     const {userName,email,phone}=req.body
   
-    const userId=verification(req)
+    const userId=req.id
+    // const userId=verification(req)
 
     if(!userId){
       throw new Error("Invalid Token")
@@ -281,7 +274,8 @@ const updateProfile=async(req,res)=>{
 const updateProfilePic= async(req,res)=>{
   try {
     
-    const userId=verification(req)
+    const userId=req.id
+    // const userId=verification(req)
     
     
     const userData=await User.findById(userId)
@@ -352,7 +346,7 @@ const resetPass = async (req, res) => {
 const applyCoupon = async (req, res) => {
   try {
     const { coupon } = req.body;
-   const userId=verification(req)
+   const userId=req.id
 
    const isUserExist=await Coupon.findOne({ couponCode: coupon,users: { $elemMatch: { userId } } })
    if(isUserExist){
@@ -425,8 +419,25 @@ const getCouponData = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: "Internal Server Error" });
   }
-};
+};//<==================================== cancel booking ==================================>
+const cancelBooking=async(req,res)=>{
+  try {
+
+    const bookingId=req.query.id
+
+
+    const bookingData=await Booking.findById(bookingId)
+    if(!bookingData){
+      return res.status(404).json({error:"booking not found"})
+    }
+    bookingData.status="Cancelled"
+    bookingData.save()
+    res.status(200).json({ bookingData });
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 
 
-module.exports={userSignUp,userSignin,userData,getBookings,bookedDates,addReview,updateProfile,updateProfilePic,emailValid,resetPass,getCruiseOffer,getCouponData,applyCoupon}
+module.exports={userSignUp,userSignin,userData,getBookings,cancelBooking,bookedDates,addReview,updateProfile,updateProfilePic,emailValid,resetPass,getCruiseOffer,getCouponData,applyCoupon}
