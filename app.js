@@ -23,7 +23,7 @@ app.use(express.json());
 
 app.use(cors({
   origin: ["https://cruisekerala.netlify.app"],
-  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
@@ -45,7 +45,7 @@ mongoose
   .then(() => {
     console.log('Connected to the database');
     
-    const PORT = process.env.PORT || 5000;
+    const PORT =  5000;
 
     httpServer.listen(PORT, () => {
       console.log(`HTTP server is running on port ${PORT}`);

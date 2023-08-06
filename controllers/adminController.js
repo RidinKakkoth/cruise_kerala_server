@@ -73,13 +73,12 @@ const adminSignin = async (req, res) => {
       token,
     };
 
-    res
-      .cookie("adminCookie", obj, {
-        httpOnly: false,
-        maxAge: 6000 * 1000,
-        secure: true,
-      })
-      .status(200)
+    // res.cookie("adminCookie", obj, {
+    //     httpOnly: false,
+    //     maxAge: 6000 * 1000,
+    //     secure: true,
+    //   })
+      res.status(200)
       .send({ adminLogin, message: "Login Successfull" });
   } catch (error) {
     res.status(400).json({ message: "Error in Login" });

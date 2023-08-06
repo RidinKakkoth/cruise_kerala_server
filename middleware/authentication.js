@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 
 const isAdmin =async (req, res, next) => {
   try {
-    const jwtToken = req.cookies.adminCookie.token;
+    const jwtToken = req.cookies.adminCookie;
 
     const decodedToken = jwt.verify(jwtToken, process.env.ADMIN_SECRET_KEY);
     const adminId = decodedToken.id;
@@ -30,7 +30,7 @@ const isPartner =async (req, res, next) => {
   try {
 
    
-    const jwtToken = req.cookies.partnerCookie.token;
+    const jwtToken = req.cookies.partnerCookie;
     const decodedToken = jwt.verify(jwtToken, process.env.PARTNER_SECRET_KEY);
     const partnerId = decodedToken.id;
 
@@ -53,8 +53,7 @@ const isPartner =async (req, res, next) => {
 const isUser =async (req, res, next) => {
   try {
 
-    
-    const jwtToken = req.cookies.userCookie.token;
+    const jwtToken = req.cookies.userCookie;
     const decodedToken = jwt.verify(jwtToken, process.env.USER_SECRET_KEY);
     const userId = decodedToken.id;
     

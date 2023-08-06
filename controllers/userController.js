@@ -113,12 +113,12 @@ const userSignin=async(req,res)=>{
         };
         
    
-        res.cookie("userCookie", obj, {
-          httpOnly: false, 
-          maxAge: 6000 * 1000,
-          secure:true
-        })
-          .status(200)
+        // res.cookie("userCookie", obj, {
+        //   httpOnly: false, 
+        //   maxAge: 6000 * 1000,
+        //   secure:true
+        // })
+          res.status(200)
           .send({ userLogin });
 
     } catch (error) {
@@ -392,7 +392,7 @@ const getCruiseOffer = async (req, res) => {
     if (offerData) {
       res.json({ offerData });
     } else {
-      return res.status(404).json({ error: "offer data not found" });
+      return res.json({ error: "offer data not found" });
     }
   } catch (error) {
     return res.status(500).json({ error: "Internal Server Error" });

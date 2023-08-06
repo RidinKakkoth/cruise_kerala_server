@@ -106,12 +106,12 @@ const partnerSignin=async(req,res)=>{
         };
         
    
-        res.cookie("partnerCookie", obj, {
-          httpOnly: false, 
-          maxAge: 6000 * 1000,
-          secure:true
-        })
-          .status(200)
+        // res.cookie("partnerCookie", obj, {
+        //   httpOnly: false, 
+        //   maxAge: 6000 * 1000,
+        //   secure:true
+        // })
+         res.status(200)
           .send({ partnerLogin });
 
     } catch (error) {
