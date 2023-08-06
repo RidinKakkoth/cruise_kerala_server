@@ -34,6 +34,9 @@ app.use(cors({
 //     credentials: true
 // }));
 
+console.log('PORT:', process.env.PORT);
+console.log('BASE_URL:', process.env.BASE_URL);
+// ... other environment variables ...
 
 
 app.use("/", userRoute);
