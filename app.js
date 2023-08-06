@@ -24,8 +24,15 @@ app.use(express.json());
 app.use(cors({
   origin: ["https://cruisekerala.netlify.app"],
   methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-  credentials: true
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
+// app.use(cors({
+//   origin: ["https://cruisekerala.netlify.app"],
+//   methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+//   credentials: true
+// }));
 
 app.use("/", userRoute);
 app.use("/admin", adminRoute);
@@ -47,7 +54,9 @@ mongoose
     const io = new Server(httpServer, {
       cors: {
         origin: ["https://cruisekerala.netlify.app"],
-        methods: ["GET", "POST"]
+        methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+        credentials: true,
+        allowedHeaders: ['Content-Type', 'Authorization'],
       }
     });
 
