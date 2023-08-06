@@ -23,11 +23,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.json());
 
+// app.use(cors({
+//     origin: process.env.BASE_URL || "http://localhost:3000",
+//     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+//     credentials: true
+// }));
 app.use(cors({
-    origin: process.env.BASE_URL || "http://localhost:3000",
-    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-    credentials: true
+  origin: ["https://cruisekerala.netlify.app"],
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  credentials: true
 }));
+
 // app.use(cors({
 //     origin: ["http://localhost:3000"],
 //     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
