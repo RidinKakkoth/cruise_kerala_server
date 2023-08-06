@@ -21,6 +21,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
+
+app.set("trust proxy", 1);
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'Super Secret (change it)',
+    resave: true,
+    saveUninitialized: false,
+    cookie: {
+      sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax', // must be 'none' to enable cross-site delivery
+      secure: process.env.NODE_ENV === "production", // must be true if sameSite='none'
+    }
+  })
+);
 app.use(cors({
   origin: ["https://cruisekerala.netlify.app"],
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
