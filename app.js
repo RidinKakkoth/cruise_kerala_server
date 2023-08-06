@@ -6,6 +6,8 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
+const session = require('express-session');
+
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -24,17 +26,16 @@ app.use(express.json());
 
 app.set("trust proxy", 1);
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || 'Super Secret (change it)',
-    resave: true,
-    saveUninitialized: false,
-    cookie: {
-      sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax', // must be 'none' to enable cross-site delivery
-      secure: process.env.NODE_ENV === "production", // must be true if sameSite='none'
-    }
-  })
-);
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'Super Secret (change it)',
+  resave: true,
+  saveUninitialized: false,
+  cookie: {
+    sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax',
+    secure: process.env.NODE_ENV === "production",
+  }
+}));
+
 app.use(cors({
   origin: ["https://cruisekerala.netlify.app"],
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
