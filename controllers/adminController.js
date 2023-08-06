@@ -77,7 +77,7 @@ const adminSignin = async (req, res) => {
       .cookie("adminCookie", obj, {
         httpOnly: false,
         maxAge: 6000 * 1000,
-        secure: false,
+        secure: true,
       })
       .status(200)
       .send({ adminLogin, message: "Login Successfull" });

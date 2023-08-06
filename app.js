@@ -79,10 +79,16 @@ httpServer.listen(PORT, () => {
 
     const io = new Server(httpServer, {
       cors: {
-        origin: process.env.BASE_URL || "http://localhost:3000",
+        origin: ["https://cruisekerala.netlify.app"],
         methods: ["GET", "POST"]
       }
     });
+    // const io = new Server(httpServer, {
+    //   cors: {
+    //     origin: process.env.BASE_URL || "http://localhost:3000",
+    //     methods: ["GET", "POST"]
+    //   }
+    // });
     
 
 

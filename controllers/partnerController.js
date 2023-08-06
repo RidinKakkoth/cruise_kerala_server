@@ -109,7 +109,7 @@ const partnerSignin=async(req,res)=>{
         res.cookie("partnerCookie", obj, {
           httpOnly: false, 
           maxAge: 6000 * 1000,
-          secure:false
+          secure:true
         })
           .status(200)
           .send({ partnerLogin });

@@ -116,7 +116,7 @@ const userSignin=async(req,res)=>{
         res.cookie("userCookie", obj, {
           httpOnly: false, 
           maxAge: 6000 * 1000,
-          secure:false
+          secure:true
         })
           .status(200)
           .send({ userLogin });
