@@ -6,7 +6,6 @@ const Message=require("../models/messageModel")
 const createMessage=async(req,res)=>{
    
     try {
-        // console.log(req.body);
 
         const {chatId,senderId,text}=req.body
         
@@ -27,7 +26,7 @@ const createMessage=async(req,res)=>{
 
 const getMessage=async (req,res)=>{
     try {
-        
+      
         const{chatId}=req.params;
 
         const messages=await Message.find({chatId});

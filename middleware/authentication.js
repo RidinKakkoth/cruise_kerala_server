@@ -6,7 +6,9 @@ const jwt = require("jsonwebtoken");
 
 const isAdmin =async (req, res, next) => {
   try {
-    const jwtToken = req.cookies.adminCookie;
+    
+    const jwtToken = req.headers.authorization?.split(' ')[1];
+    // const jwtToken = req.cookies.adminCookie;
 
     const decodedToken = jwt.verify(jwtToken, process.env.ADMIN_SECRET_KEY);
     const adminId = decodedToken.id;
@@ -30,7 +32,9 @@ const isPartner =async (req, res, next) => {
   try {
 
    
-    const jwtToken = req.cookies.partnerCookie;
+    const jwtToken = req.headers.authorization?.split(' ')[1];
+console.log(jwtToken);
+    // const jwtToken = req.cookies.partnerCookie;
     const decodedToken = jwt.verify(jwtToken, process.env.PARTNER_SECRET_KEY);
     const partnerId = decodedToken.id;
 
@@ -52,14 +56,15 @@ const isPartner =async (req, res, next) => {
 
 const isUser =async (req, res, next) => {
   try {
+    
+      const authorizationHeader = req.headers.authorization;
 
-    const jwtToken = req.cookies.userCookie;
+const jwtToken = authorizationHeader.replace('Bearer ', '');
     const decodedToken = jwt.verify(jwtToken, process.env.USER_SECRET_KEY);
     const userId = decodedToken.id;
-    
+  
     
     const isFound=await User.findById(userId).select('-password')
-    
     if (isFound) {
       req.id=isFound._id
       next(); 

@@ -241,7 +241,7 @@ res.status(500).json({error:'Internal server error'});
 const updateProfile=async(req,res)=>{
   try {
 
-    const {name,email,companyName,phone}=req.body
+    const {name,email,companyName,phone}=req.body.updatedProfileData
     
 
     const partnerId=req.id

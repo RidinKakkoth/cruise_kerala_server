@@ -5,7 +5,7 @@ const{createMessage,getMessage}=require("../controllers/messageController")
 
 
 router.post("/",createMessage)
-router.get("/:chatId",getMessage)
+router.get("/:chatId",getMessage)//done
 
 
 module.exports=router;

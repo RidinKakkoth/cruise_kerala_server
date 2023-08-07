@@ -6,7 +6,6 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
-const session = require('express-session');
 
 
 const app = express();
@@ -15,7 +14,7 @@ const httpServer = http.createServer(app);
 const userRoute = require('./routes/user');
 const adminRoute = require('./routes/admin');
 const partnerRoute = require('./routes/partner');
-const chatRoute = require('./routes/chat');
+// const chatRoute = require('./routes/chat');
 const messageRoute = require('./routes/message');
 
 app.use(cookieParser());
@@ -24,35 +23,20 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
 
-app.set("trust proxy", 1);
-
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'Super Secret (change it)',
-  resave: true,
-  saveUninitialized: false,
-  cookie: {
-    sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax',
-    secure: process.env.NODE_ENV === "production",
-  }
-}));
 
 app.use(cors({
-  origin: ["https://cruisekerala.netlify.app"],
+  origin: ["http://localhost:3000","https://cruisekerala.netlify.app"],
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-// app.use(cors({
-//   origin: ["https://cruisekerala.netlify.app"],
-//   methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-//   credentials: true
-// }));
+
 
 app.use("/", userRoute);
 app.use("/admin", adminRoute);
 app.use("/partner", partnerRoute);
-app.use("/chat", chatRoute);
+// app.use("/chat", chatRoute);
 app.use("/message", messageRoute);
 
 mongoose
@@ -68,8 +52,8 @@ mongoose
 
     const io = new Server(httpServer, {
       cors: {
-        origin: ["https://cruisekerala.netlify.app"],
-        methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+        origin: ["http://localhost:3000","https://cruisekerala.netlify.app"],
+        methods: ['GET', 'POST'],
         credentials: true,
         allowedHeaders: ['Content-Type', 'Authorization'],
       }

@@ -70,6 +70,8 @@ const userSignin=async(req,res)=>{
     
     try {
 
+      console.log("hiiiiiiiiii");
+
         let userLogin={
             status: false,
             token: null,
@@ -132,10 +134,7 @@ const userSignin=async(req,res)=>{
 const userData=async(req,res)=>{
   try {
     
-    if(!req.cookies||!req.cookies.userCookie){
-      return res.status(401).json({error:"unAuthorized"});
-      
-    }
+
     
     const userId=req.id
     // const userId=verification(req)
@@ -165,6 +164,7 @@ const userData=async(req,res)=>{
 const getBookings = async (req, res) => {
   try {
     const userId = req.id
+    console.log(userId,"xxxxxxxxxxxxxxx");
     // const userId = verification(req);
 
     const bookingData = await Booking.find({
@@ -240,11 +240,10 @@ const addReview=async(req,res)=>{
 const updateProfile=async(req,res)=>{
   try {
 
-    const {userName,email,phone}=req.body
+    const {userName,email,phone}=req.body.updatedProfileData
   
     const userId=req.id
     // const userId=verification(req)
-
     if(!userId){
       throw new Error("Invalid Token")
     }
@@ -253,7 +252,6 @@ const updateProfile=async(req,res)=>{
     if(!userData){
       throw new Error("Partner not found")
     }
-
     userData.name=userName
     userData.email=email
     userData.phone=phone

@@ -2,39 +2,12 @@ const  Admin  = require('../models/adminModel');
 const Chat=require("../models/chatModel")
 const jwt = require("jsonwebtoken");
 
-const userVerification=(req,res)=>{
-
-   
-    if(!req.cookies||!req.cookies.userCookie){
-        return res.status(401).json({error:"unAuthorized"}); 
-      }
-    const jwtToken=req.cookies.userCookie.token
-  
-    const decodedToken=jwt.verify(jwtToken,process.env.USER_SECRET_KEY)
-  
-    const userId=decodedToken.id
-  
-    return userId
-  }
-  const adminVerification = (req,res) => {
-    if(!req.cookies||!req.cookies.adminCookie){
-        return res.status(401).json({error:"unAuthorized"});
-      
-      }
-    const jwtToken = req.cookies.adminCookie.token;
-  
-    const decodedToken = jwt.verify(jwtToken, process.env.ADMIN_SECRET_KEY);
-  
-    const adminId = decodedToken.id;
-  
-    return adminId;
-  };
 
 
-const createChat=async(req,res)=>{
+const createChat=async(req,res)=>{  //=================================================
     try {
 
-        const userId = userVerification(req,res)
+        const userId=req.id
         const adminData=await Admin.findOne()
         const adminId=adminData._id
 
@@ -57,9 +30,11 @@ const createChat=async(req,res)=>{
 }
 
 
-const findUserChats=async (req,res)=>{
+const findUserChats=async (req,res)=>{  //==========================================done
 
-    const userId=userVerification(req,res)
+
+
+    const userId=req.id
     try {
         
         const chats=await Chat.find({  userId  })
@@ -73,8 +48,9 @@ const findUserChats=async (req,res)=>{
     }
 }
 
-const findAdminChats=async(req,res)=>{
-    const adminId=adminVerification(req,res)
+const findAdminChats=async(req,res)=>{ //=======================================
+   
+    const adminId=req.id
     try {
         
         const chats=await Chat.find({  adminId  }).populate("userId")

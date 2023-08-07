@@ -16,6 +16,8 @@ const {
   addCategory,
   getCategories,blockCruise,editCategory
 } = require("../controllers/cruiseController");
+const{findAdminChats}=require("../controllers/chatController")
+
 
 router.post("/adminSignUp", adminSignUP);
 router.post("/adminSignin", adminSignin);
@@ -47,6 +49,6 @@ router.get("/get-coupon-data",isAdmin, getCouponData);
 router.patch("/blockCoupon",isAdmin, blockCoupon);// patch
 router.patch("/delete-coupon",isAdmin, deleteCoupon);// patch
 
-
+router.get("/adminChat",isAdmin,findAdminChats)
 
 module.exports = router;
