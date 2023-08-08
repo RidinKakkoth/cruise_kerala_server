@@ -30,11 +30,8 @@ const isAdmin =async (req, res, next) => {
 
 const isPartner =async (req, res, next) => {
   try {
-
-   
     const jwtToken = req.headers.authorization?.split(' ')[1];
-console.log(jwtToken);
-    // const jwtToken = req.cookies.partnerCookie;
+
     const decodedToken = jwt.verify(jwtToken, process.env.PARTNER_SECRET_KEY);
     const partnerId = decodedToken.id;
 

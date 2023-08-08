@@ -37,7 +37,6 @@ const addCruiseData=async (req,res)=>{
         })
         const addedCruise= await newCruise.save()
         
-        
         const x= await Notification.create({
           message:'Partner added new cruise',
           notification:`Partner ${partnerData.name} added new cruise ${newCruise.name} `,
@@ -46,7 +45,7 @@ const addCruiseData=async (req,res)=>{
 
      if(addedCruise)
     { 
-    
+    console.log("added");
      return res.send({status:true,message:"success"})}
 
     } catch (error) {
@@ -247,41 +246,60 @@ const singleView=async(req,res)=>{
 }
 
 //<==================================== edit cruise data ==================================>
-
-const editCruiseData=async (req,res)=>{
+const editCruiseData = async (req, res) => {
   try {
-    
-    // const licenseFile = req.files.license[0].filename;
-    // const imageFilenames = req.files.images.map((file) => file.filename);//===============>+++++++
-    // console.log(imageFilenames,"9999999999999999");
+    const cruiseId = req.query.id;
+    const{ name,category,description,boarding,town,district,pin,rooms,baseRate,extraRate,maxGuest,AC,food,TV,partyHall,games,fishing,wifi,pets,imagesToDelete}=req.body
 
-    const{ name,category,description,boarding,town,district,pin,rooms,baseRate,extraRate,maxGuest,AC,food,TV,partyHall,games,fishing,wifi,pets}=req.body
- 
-    const updateData={
-      name,category,description,boarding,town,district,pin,rooms,baseRate,extraRate,maxGuest,
-      Facilities: [{AC,food, TV, pets, partyHall,fishing,games, wifi }]
+    // Upload new images to Cloudinary and get their secure URLs
+    const imageFilenames = req.files.images;
+    const newImages = [];
+
+    for (const file of imageFilenames) {
+      const result = await cloudinary.uploader.upload(file.path);
+      newImages.push(result.secure_url);
     }
-    const cruiseId=req.query.id
 
-    if(!cruiseId){
-     return res.status(401).json({ error: 'Invalid ' });
+    // Get images to be deleted from the request body
+    const imagesToDeleteArray = req.body.imagesToDelete.split(',');
+
+    // Get existing cruise data
+    const existingCruise = await Cruise.findById(cruiseId);
+
+    // Construct the updated images array (preserve existing images, add new ones)
+    const updatedImages = [...existingCruise.Images, ...newImages];
+
+    // Remove images to be deleted
+    const updatedImagesWithoutDeleted = updatedImages.filter(image => !imagesToDeleteArray.includes(image));
+
+    // Update other cruise data
+    const updateData = {
+      name, category, description, boarding, town, district, pin, rooms, baseRate, extraRate, maxGuest,
+      Facilities: [{ AC, food, TV, pets, partyHall, fishing, games, wifi }],
+      Images: updatedImagesWithoutDeleted,
+    };
+
+    if (!cruiseId) {
+      return res.status(401).json({ error: 'Invalid ' });
     }
-    // const cruiseData= await Cruise.findById({cruiseId})
-         const updatedCruise = await   Cruise.findByIdAndUpdate(cruiseId,{$set:updateData},{ new: true })
 
+    // Update cruise data
+    const updatedCruise = await Cruise.findByIdAndUpdate(cruiseId, { $set: updateData }, { new: true });
 
-   await Notification.create({
-    message:'Partner added new cruise',
-    notification:`Partner updated ${updatedCruise.name} details `,
-    status:'warning'
-  })
-   if(updatedCruise)
-   res.status(200).send({status:true,message:"success"})
+    await Notification.create({
+      message: 'Partner added new cruise',
+      notification: `Partner updated ${updatedCruise.name} details `,
+      status: 'warning',
+    });
 
+    if (updatedCruise) {
+      res.status(200).send({ status: true, message: 'success' });
+    }
   } catch (error) {
-    res.status(500).json({error:'Internal server error'});
+    res.status(500).json({ error: 'Internal server error' });
   }
-}
+};
+
 
 
 module.exports={singleView,getPartnerCruiseData,getCruiseData,editCruiseData,addCruiseData,blockCruise,cruiseApproval,addCategory,getCategories,editCategory}
