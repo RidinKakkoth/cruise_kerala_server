@@ -241,11 +241,10 @@ res.status(500).json({error:'Internal server error'});
 const updateProfile=async(req,res)=>{
   try {
 
-    const {name,email,companyName,phone}=req.body.updatedProfileData
-    
+    const {name,email,companyName,phone}=req.body
 
     const partnerId=req.id
-
+console.log(partnerId);
     if(!partnerId){
       throw new Error("Invalid Token")
     }

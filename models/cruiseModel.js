@@ -69,6 +69,7 @@ const CruiseSchema = new mongoose.Schema({
   isBlocked: { type: Boolean,default:false },
   Liscence:{type:String,required:true},
   isApproved:{type:String,default:"pending"},
+  partnerStatus:{type:Boolean,default:true},
   partnerId:{
     type:mongoose.Schema.Types.ObjectId,
     ref:"partner"

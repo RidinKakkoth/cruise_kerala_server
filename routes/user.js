@@ -39,7 +39,7 @@ router.get("/get-coupon",getCouponData);
 router.post('/orders',isUser,orderCreate)
 router.post('/verify',isUser,verify)
 
-router.get("/userChat",isUser,findUserChats)//done
+router.get("/userChat",isUser,findUserChats)
 router.post("/createChat",isUser,createChat)
 
 

@@ -114,7 +114,7 @@ const blockCruise=async(req,res)=>{
 const getCruiseData=async(req,res)=>{
   try {
 
-    const data=await Cruise.find({ isBlocked:false, isApproved:"verified"}).populate("category")
+    const data=await Cruise.find({ isBlocked:false, isApproved:"verified",partnerStatus:true}).populate("category")
 
     if(data){
      const categoryData= await Category.find()

@@ -120,6 +120,12 @@ const blockPartner = async (req, res) => {
     }
 
     partnerData.isBlocked = !partnerData.isBlocked;
+    const cruideData = await Cruise.find({ partnerId: partnerId });
+
+    for (const data of cruideData) {
+      data.partnerStatus = !data.partnerStatus;
+      await data.save();
+    }
     const updateData = await partnerData.save();
 
     res.status(200).json({ message: "success" });

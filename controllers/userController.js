@@ -70,7 +70,6 @@ const userSignin=async(req,res)=>{
     
     try {
 
-      console.log("hiiiiiiiiii");
 
         let userLogin={
             status: false,
@@ -137,7 +136,6 @@ const userData=async(req,res)=>{
 
     
     const userId=req.id
-    // const userId=verification(req)
 
     try {
     
@@ -164,8 +162,6 @@ const userData=async(req,res)=>{
 const getBookings = async (req, res) => {
   try {
     const userId = req.id
-    console.log(userId,"xxxxxxxxxxxxxxx");
-    // const userId = verification(req);
 
     const bookingData = await Booking.find({
       userId: userId,
@@ -210,7 +206,6 @@ const addReview=async(req,res)=>{
   try {
 
     const userId=req.id
-    // const userId=verification(req)
     const{star,feedback,cruiseId}=req.body
     
     const cruiseData=await Cruise.findById(cruiseId)
@@ -240,10 +235,9 @@ const addReview=async(req,res)=>{
 const updateProfile=async(req,res)=>{
   try {
 
-    const {userName,email,phone}=req.body.updatedProfileData
+    const {userName,email,phone}=req.body
   
     const userId=req.id
-    // const userId=verification(req)
     if(!userId){
       throw new Error("Invalid Token")
     }
@@ -273,7 +267,6 @@ const updateProfilePic= async(req,res)=>{
   try {
     
     const userId=req.id
-    // const userId=verification(req)
     
     
     const userData=await User.findById(userId)
@@ -284,9 +277,7 @@ const updateProfilePic= async(req,res)=>{
     if(req.file&&req.file.path){
 
      const result=await cloudinary.uploader.upload(req.file.path)
-      
-      // userData.image=req.file.filename
-      // const url = req.file.filename
+
       const url = result. secure_url
       userData.image=result. secure_url
           await userData.save()
@@ -369,7 +360,7 @@ const applyCoupon = async (req, res) => {
 
     res.status(200).json({status:true, message: 'Coupon is valid',offer });
   } catch (error) {
-    console.error(error);
+  
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -406,7 +397,6 @@ const getCouponData = async (req, res) => {
       validFrom: { $lte: currentDate }
     }).limit(1);
     
-    console.log(couponData,"cccccccccc");
 
    
     if (couponData) {
@@ -432,7 +422,7 @@ const cancelBooking=async(req,res)=>{
     bookingData.save()
     res.status(200).json({ bookingData });
   } catch (error) {
-    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 }
 

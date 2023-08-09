@@ -26,19 +26,19 @@ router.get("/getPartnerData",isAdmin, getPartnerData);
 router.get('/getPartnerProfile',isAdmin, getPartnerData);
 router.get("/getPartnerProfileData",isAdmin, getPartnerProfile);
 router.get("/partner-cruise-data",isAdmin, getPartnerCruiseData);
-router.patch("/blockPartner",isAdmin, blockPartner);// patch
-router.patch("/partner-approval",isAdmin, partnerApproval);//patch
+router.patch("/blockPartner",isAdmin, blockPartner);
+router.patch("/partner-approval",isAdmin, partnerApproval);
 
-router.patch("/blockUser",isAdmin, blockUser);// patch
+router.patch("/blockUser",isAdmin, blockUser);
 router.get("/get-userData",isAdmin, getUserData);
 
 router.get('/cruise-data',isAdmin,getCruiseData)
-router.patch("/cruise-approval",isAdmin, cruiseApproval);//patch
+router.patch("/cruise-approval",isAdmin, cruiseApproval);
 router.patch('/blockCruise',isAdmin,blockCruise)
 router.get("/get-bookings",isAdmin, getBookings);
 
 router.post("/add-category",isAdmin, addCategory);
-router.patch("/edit-category/:id",isAdmin, editCategory);//===================edit
+router.patch("/edit-category/:id",isAdmin, editCategory);
 router.get("/get-categories",isAdmin, getCategories);
 
 router.get('/get-notification',isAdmin,getNotification)
@@ -46,8 +46,8 @@ router.delete('/delete-notification/:id',isAdmin,deleteNotification)
 
 router.post("/add-coupon",isAdmin, addCoupon);
 router.get("/get-coupon-data",isAdmin, getCouponData);
-router.patch("/blockCoupon",isAdmin, blockCoupon);// patch
-router.patch("/delete-coupon",isAdmin, deleteCoupon);// patch
+router.patch("/blockCoupon",isAdmin, blockCoupon);
+router.patch("/delete-coupon",isAdmin, deleteCoupon);
 
 router.get("/adminChat",isAdmin,findAdminChats)
 
