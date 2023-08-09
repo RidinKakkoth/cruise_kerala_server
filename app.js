@@ -14,7 +14,6 @@ const httpServer = http.createServer(app);
 const userRoute = require('./routes/user');
 const adminRoute = require('./routes/admin');
 const partnerRoute = require('./routes/partner');
-// const chatRoute = require('./routes/chat');
 const messageRoute = require('./routes/message');
 
 app.use(cookieParser());
@@ -25,7 +24,7 @@ app.use(express.json());
 
 
 app.use(cors({
-  origin: ["http://localhost:3000","https://cruisekerala.netlify.app"],
+  origin: ["http://localhost:3000",process.env.BASE_URL],
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -36,7 +35,6 @@ app.use(cors({
 app.use("/", userRoute);
 app.use("/admin", adminRoute);
 app.use("/partner", partnerRoute);
-// app.use("/chat", chatRoute);
 app.use("/message", messageRoute);
 
 mongoose
@@ -52,7 +50,7 @@ mongoose
 
     const io = new Server(httpServer, {
       cors: {
-        origin: ["http://localhost:3000","https://cruisekerala.netlify.app"],
+        origin: ["http://localhost:3000",process.env.BASE_URL],
         methods: ['GET', 'POST'],
         credentials: true,
         allowedHeaders: ['Content-Type', 'Authorization'],
