@@ -35,10 +35,6 @@ app.use(cors({
 app.use("/", userRoute);
 app.use("/admin", adminRoute);
 app.use("/partner", partnerRoute);
-app.use("/message",(req,res,next)=>{
-  console.log("tttttttttttttttthhhhhhhhhhhhhhhhhhhhhh");
-  next()
-});
 app.use("/message", messageRoute);
 
 mongoose
@@ -55,7 +51,7 @@ mongoose
     const io = new Server(httpServer, {
       cors: {
         origin: ["http://localhost:3000",process.env.BASE_URL],
-        methods: ['GET', 'POST'],
+        methods: ['GET', 'POST','PATCH'],
         credentials: true,
         allowedHeaders: ['Content-Type', 'Authorization'],
       }
