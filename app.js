@@ -35,6 +35,10 @@ app.use(cors({
 app.use("/", userRoute);
 app.use("/admin", adminRoute);
 app.use("/partner", partnerRoute);
+app.use("/message",(req,res,next)=>{
+  console.log("tttttttttttttttthhhhhhhhhhhhhhhhhhhhhh");
+  next()
+});
 app.use("/message", messageRoute);
 
 mongoose

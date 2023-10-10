@@ -6,7 +6,7 @@ const Message=require("../models/messageModel")
 const createMessage=async(req,res)=>{
    
     try {
-
+console.log(req.body,"xxxxxxxxxxxxxxx");
         const {chatId,senderId,text}=req.body
         
         const message=new Message({

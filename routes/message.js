@@ -4,7 +4,8 @@ const router = express.Router();
 const{createMessage,getMessage}=require("../controllers/messageController")
 
 
-router.post("/",createMessage)
+// router.post("/",createMessage)
+router.post("/send",createMessage)
 router.get("/:chatId",getMessage)//done
 
 

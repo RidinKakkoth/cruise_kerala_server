@@ -9,7 +9,6 @@ const Booking = require("../models/bookingModel");
 const inputValidator = require("../middleware/validator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { findOneAndDelete } = require("../models/notificationModel");
 
 const adminSignUP = async (req, res) => {
   try {
